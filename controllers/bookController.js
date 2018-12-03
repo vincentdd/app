@@ -1,7 +1,30 @@
 var Book = require('../models/book');
+var Author = require('../models/author');
+var Genre = require('../models/genre');
+var BookInstance = require('../models/bookinstance');
+var async = require('async');
 
 exports.index = function(req, res) {
-    res.send('NOT IMPLEMENTED: Site Home Page');
+
+    async.parallel({
+        book_count: function(callback) {
+            Book.count({}, callback); // Pass an empty object as match condition to find all documents of this collection
+        },
+        book_instance_count: function(callback) {
+            BookInstance.count({}, callback);
+        },
+        book_instance_available_count: function(callback) {
+            BookInstance.count({status:'Available'}, callback);
+        },
+        author_count: function(callback) {
+            Author.count({}, callback);
+        },
+        genre_count: function(callback) {
+            Genre.count({}, callback);
+        },
+    }, function(err, results) {
+        res.render('index', { title: 'Local Library Home', error: err, data: results });
+    });
 };
 
 // Display list of all books.
@@ -13,7 +36,7 @@ exports.book_list = function(req, res) {
                 return next(err);
             }
             //Successful, so render
-            res.send('NOT IMPLEMENTED: Book list');
+            res.render('book_list', { title: 'Book List', book_list: list_books });
         });
 };
 
