@@ -19,6 +19,7 @@
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
+    "jsonwebtoken": "^8.4.0",
     "nodemon": "^1.18.6"
   }
 }

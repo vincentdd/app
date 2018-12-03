@@ -3,8 +3,8 @@ const  router = express.Router();
 const User = require('../models/User');
 
 /* GET users listing. */
-router.get('/user', function(req, res, next) {
-  User.find({})
+router.get('/', function(req, res, next) {
+    User.find({})
     .sort({ update_at: -1 })
     .then(users => {
       res.json(users);
@@ -15,7 +15,7 @@ router.get('/user', function(req, res, next) {
     });
 });
 
-router.post('/user', function(req, res, next) {
+router.post('/', function(req, res, next) {
   User.create(req.body, (err, user) => {
     if (err) {
       res.json(err);
@@ -24,4 +24,5 @@ router.post('/user', function(req, res, next) {
     }
   });
 });
+
 module.exports = router;

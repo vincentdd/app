@@ -1,20 +1,18 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var morgan     = require("morgan");
-var bodyParser = require("body-parser");
-var jwt        = require("jsonwebtoken");
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var morgan = require("morgan");
+var jwt = require("jsonwebtoken");
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const userRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
 
 var app = express();
 
-// var port = process.env.PORT || 3001;
-// var User     = require('./models/User');
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
@@ -145,14 +143,18 @@ app.use(bodyParser.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+//set listeninig port
+//*******************************
+// var User = require('./models/User');
+//*********************************
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', userRouter);
 app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
 
 // catch 404 and forward to error handler
