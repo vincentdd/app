@@ -13,8 +13,4 @@ UserSchema
         return '/user/' + this._id;
     });
 
-UserSchema.create(data, function(err, doc) {
-    if (err) return console.log(err);
-    console.log(doc);
-})
 module.exports = mongoose.model('User', UserSchema);
