@@ -45,8 +45,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 //node populatedb "mongodb://vincedd:1118@piggybank-shard-00-00-cwj1z.mongodb.net:27017,piggybank-shard-00-01-cwj1z.mongodb.net:27017,piggybank-shard-00-02-cwj1z.mongodb.net:27017/test?ssl=true&replicaSet=piggybank-shard-0&authSource=admin&retryWrites=true"
 
 //**********************
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 // app.use(morgan("dev"));
 // app.use(function(req, res, next) {
 //     res.setHeader('Access-Control-Allow-Origin', '*');
