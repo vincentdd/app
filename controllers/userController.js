@@ -9,7 +9,6 @@ exports.sign_up = [
         .isAlphanumeric().withMessage('password has non-alphanumeric characters.'),
     sanitizeBody('user_name').trim().escape(),
     sanitizeBody('password').trim().escape(),
-
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -18,17 +17,30 @@ exports.sign_up = [
             res.json({errors: errors.mapped()});
             return;
         }else {
-            const user = new User({
-                user_name: req.body.user_name,
-                password: req.body.password
-            });
-            user.save(function(err){
-                if(err){return next(err);}
-            });
-            res.send({
-                user_name: req.body.user_name,
-                password: req.body.password
-            })
+            User.find({user_name:  req.body.user_name})
+                .then(function (_user) {
+                    if(_user.length !== 0) {
+                        res.send("Username is already taken");
+                        // res.send('' + _user.length);
+                        return;
+                    }else{
+                        const user = new User({
+                            user_name: req.body.user_name,
+                            password: req.body.password
+                        });
+                        user.save(function (err, doc) {
+                            if (err) {
+                                console.log(`error:${err}`)
+                            } else {
+                                console.log(doc)
+                            }
+                        })
+                        res.send({
+                            user_name: req.body.user_name,
+                            password: req.body.password
+                        })
+                    }
+                });
         }
     }
 ]
