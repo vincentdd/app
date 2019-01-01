@@ -13,4 +13,4 @@ UserSchema
         return '/user/' + this._id;
     });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema, 'User');

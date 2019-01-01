@@ -1,5 +1,4 @@
 const UserDao = require('../dao/UserDao');
-
 let userDao = new UserDao();
 
 class UserService {
@@ -10,6 +9,15 @@ class UserService {
             return userList;
         } catch (err) {
             console.log(`getUserList error--> ${error}`);
+            return error;
+        }
+    }
+    async register (obj) {
+        try {
+            let rescode = await userDao.save(obj);
+            return rescode;
+        } catch (err) {
+            console.log(`register error--> ${error}`);
             return error;
         }
     }

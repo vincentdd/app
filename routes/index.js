@@ -6,4 +6,6 @@ router.get('/', function(req, res) {
   res.redirect('/catalog');
 });
 
+router.use('/tag', require('./tag'));
+
 module.exports = router;

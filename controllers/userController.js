@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
+const UserService = require('../services/UserService');
 
 exports.sign_up = [
     body('user_name').isLength({ min: 1 }).trim().withMessage('user name must be specified.')
@@ -28,19 +29,18 @@ exports.sign_up = [
                             user_name: req.body.user_name,
                             password: req.body.password
                         });
-                        user.save(function (err, doc) {
-                            if (err) {
-                                console.log(`error:${err}`)
-                            } else {
-                                console.log(doc)
-                            }
-                        })
-                        res.send({
-                            user_name: req.body.user_name,
-                            password: req.body.password
-                        })
+                        const userService = new UserService();
+                        userService.register(user);
+                        // user.save(function (err, doc) {
+                        //     if (err) {
+                        //         console.log(`error:${err}`)
+                        //     } else {
+                        //         console.log(doc)
+                        //     }
+                        // })
+                        res.send(user);
                     }
                 });
         }
     }
-]
+];
