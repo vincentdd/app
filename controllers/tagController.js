@@ -1,4 +1,4 @@
-const Tag = require('../models/tag');
+// const Tag = require('../models/tag');
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const TagService = require('../services/TagService');
@@ -18,7 +18,7 @@ exports.add_tag = [
             res.json({errors: errors.mapped()});
             return;
         }else {
-            Tag.find({context:  req.body.context})
+            TagService.findOne({'context':  req.body.context})
                 .then(function (_context) {
                     if(_context.length !== 0) {
                         res.send("context is already exists");
@@ -38,10 +38,8 @@ exports.add_tag = [
     }
 ];
 
-exports.find_all = [
-    (req, res, next) => {
+exports.find_all = (req, res, next) => {
         const tagService = new TagService();
-        const result = tagService.getUserList();
+        const result = tagService.findAll();
         res.send(result);
-    }
-];
+};
