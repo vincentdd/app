@@ -1,9 +1,6 @@
 // const TagDao = require('../dao/TagDao');
 // let tagDao = new TagDao();
 const BaseService = require('./BaseService');
-
-// let BaseDao = require('./BaseDao');
-// 导入对应的实体
 let Tag = require('../models/tag');
 
 class TagService extends BaseService{
