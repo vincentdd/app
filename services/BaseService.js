@@ -55,7 +55,10 @@ class BaseService {
      */
     async findAll(condition, constraints) {
         try {
+            console.log(condition);
+            // console.log(this.Model);
             let data = await this.Model.find(condition, constraints ? constraints : null);
+            // let data = await this.Model.find();
             console.log('findAll success--> ', data);
             return data;
         } catch (error) {

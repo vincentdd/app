@@ -40,6 +40,14 @@ exports.add_tag = [
 
 exports.find_all = (req, res, next) => {
         const tagService = new TagService();
-        const result = tagService.findAll({context: "住"});
-        res.send(result);
+        tagService.findAll({context: '食'})
+            .then(function(_resule) {
+                if(_resule.length !== 0) {
+                    console.log(_resule);
+                    return;
+                } else {
+                    res.status(200);
+                    res.send({..._resule});
+                }
+            });
 };
