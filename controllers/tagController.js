@@ -1,4 +1,4 @@
-// const Tag = require('../models/tag');
+const Tag = require('../models/tag');
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const TagService = require('../services/TagService');
@@ -18,20 +18,19 @@ exports.add_tag = [
             res.json({errors: errors.mapped()});
             return;
         }else {
-            TagService.findOne({'context':  req.body.context})
+            const tagService = new TagService();
+            tagService.findOne({'context':  req.body.context})
                 .then(function (_context) {
-                    if(_context.length !== 0) {
-                        res.send("context is already exists");
-                        // res.send('' + _user.length);
+                    if (_context.length !== 0){
+                        res.send({rescode:-1, context:"tag is already exists"});
                         return;
                     }else{
                         const tag = new Tag({
                             context: req.body.context,
-                            password: req.body.password
                         });
-                        const tagService = new TagService();
-                        tagService.register(tag);
+                        tagService.save(tag);
                         res.send(tag);
+                        return;
                     }
                 });
         }
@@ -44,10 +43,9 @@ exports.find_all = (req, res, next) => {
             .then(function(_resule) {
                 if(_resule.length !== 0) {
                     console.log(_resule);
-                    return;
-                } else {
-                    res.status(200);
                     res.send({..._resule});
+                } else {
+                    res.send({res_code: -1, context:'not found'});
                 }
             });
 };

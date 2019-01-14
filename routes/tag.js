@@ -4,6 +4,6 @@ const tag_controller = require('../controllers/tagController');
 
 router.get('/', tag_controller.find_all);
 
-router.post('/', );
+router.post('/', tag_controller.add_tag);
 
 module.exports = router;
