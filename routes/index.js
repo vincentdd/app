@@ -7,5 +7,8 @@ router.get('/', function(req, res) {
 });
 
 router.use('/tag', require('./tag'));
+router.use('/login', require('./login'));
+router.use('/register', require('./register'));
+router.use('/catalog', require('./catalog'));
 
 module.exports = router;
