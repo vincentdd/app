@@ -2,10 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
-var TagSchema = new Schema({
-    context: String,
-    tagId: ObjectId
-    //tagId: {type: ObjectId, ref: 'Tag', required: true},
+const TagSchema = new Schema({
+    context: {type: String, required: true},
+    tagId: {type: ObjectId, required: true}
 });
 
 TagSchema
