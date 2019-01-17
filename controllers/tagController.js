@@ -4,12 +4,10 @@ const { sanitizeBody } = require('express-validator/filter');
 const TagService = require('../services/TagService');
 
 exports.add_tag = [
-    body('context').isLength({ min: 1 }).trim().withMessage('tag name must be specified.')
-        .isAlphanumeric().withMessage('user name has non-alphanumeric characters.'),
+    body('context').isLength({ min: 1 }).trim().withMessage('tag name must be specified.'),
     // body('password').isLength({ min: 1 }).trim().withMessage('password must be specified.')
     //     .isAlphanumeric().withMessage('password has non-alphanumeric characters.'),
     sanitizeBody('context').trim().escape(),
-    // sanitizeBody('password').trim().escape(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -21,17 +19,15 @@ exports.add_tag = [
             const tagService = new TagService();
             tagService.findOne({'context':  req.body.context})
                 .then(function (_context) {
-                    if (_context.length !== 0){
-                        res.send({rescode:-1, context:"tag is already exists"});
-                        return;
-                    }else{
-                        const tag = new Tag({
-                            context: req.body.context,
-                        });
-                        tagService.save(tag);
-                        res.send(tag);
-                        return;
-                    }
+                    res.send({rescode:-1, context:"tag is already exists"});
+                    return;
+                }, function (_context) {
+                    const tag = new Tag({
+                        context: req.body.context,
+                    });
+                    tagService.save(tag);
+                    res.send(tag);
+                    return;
                 });
         }
     }
@@ -39,7 +35,7 @@ exports.add_tag = [
 
 exports.find_all = (req, res, next) => {
         const tagService = new TagService();
-        tagService.findAll({context: '食'})
+        tagService.findAll()
             .then(function(_resule) {
                 if(_resule.length !== 0) {
                     console.log(_resule);

@@ -8,10 +8,10 @@ var morgan = require("morgan");
 var jwt = require("jsonwebtoken");
 
 var indexRouter = require('./routes/index');
-const loginRouter = require('./routes/login');
-const logupRouter = require('./routes/register');
-var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
-const tagRouter = require('./routes/tag');
+// const loginRouter = require('./routes/login');
+// const logupRouter = require('./routes/register');
+// var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
+// const tagRouter = require('./routes/tag');
 
 var app = express();
 
@@ -154,10 +154,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/login', loginRouter);
-app.use('/register', logupRouter);
-app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
-app.use('/log', tagRouter);
+// app.use('/login', loginRouter);
+// app.use('/register', logupRouter);
+// app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
+// app.use('/log', tagRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
