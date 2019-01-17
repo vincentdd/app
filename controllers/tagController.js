@@ -39,9 +39,9 @@ exports.find_all = (req, res, next) => {
             .then(function(_resule) {
                 if(_resule.length !== 0) {
                     console.log(_resule);
-                    res.send({..._resule});
+                    res.send({res_code: 0, payload: {..._resule}, msg: 'success'});
                 } else {
-                    res.send({res_code: -1, context:'not found'});
+                    res.send({res_code: -1, payload:{}, msg: 'not found'});
                 }
             });
 };
