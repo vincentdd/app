@@ -36,18 +36,24 @@ exports.add_tag = [
 ];
 
 exports.find_all = (req, res, next) => {
-        const tagService = new TagService();
-        tagService.findAll()
-            .then(function(_resule) {
-                if(_resule.length !== 0) {
-                    console.log(_resule);
-                    res.send({res_code: CODE_SUCCESS, payload: {..._resule}, msg: MES_SUCCESS});
-                } else {
-                    res.send({res_code: CODE_FAILED, payload:{}, msg: MES_NOT_FOUND});
-                }
-            });
+    const tagService = new TagService();
+    tagService.findAll()
+        .then(function(_resule) {
+            if(_resule.length !== 0) {
+                console.log(_resule);
+                res.send({res_code: CODE_SUCCESS, payload: {..._resule}, msg: MES_SUCCESS});
+            } else {
+                res.send({res_code: CODE_FAILED, payload:{}, msg: MES_NOT_FOUND});
+            }
+        });
 };
 
-exports.find_one = (req, res, next) => {
-
-}
+exports.find_one = [
+    body('context').isLength({ min: 1 }).trim().withMessage('tag name must be specified.'),
+    sanitizeBody('context').trim().escape(),
+    (req, res, next) => {
+        const tagService = new TagService();
+        tagService.findOne(req.body.context)
+            .then()
+    }
+]
