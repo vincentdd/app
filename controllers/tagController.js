@@ -47,3 +47,7 @@ exports.find_all = (req, res, next) => {
                 }
             });
 };
+
+exports.find_one = (req, res, next) => {
+
+}
