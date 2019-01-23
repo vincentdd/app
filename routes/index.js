@@ -6,7 +6,7 @@ router.get('/', function(req, res) {
   res.redirect('/catalog');
 });
 
-router.use('/tag', require('./tag'));
+router.use('/tags', require('./tags'));
 router.use('/login', require('./login'));
 router.use('/register', require('./register'));
 router.use('/catalog', require('./catalog'));

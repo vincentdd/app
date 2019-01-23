@@ -30,7 +30,6 @@ exports.add_tag = [
                         });
                     }
                 });
-            return;
         }
     }
 ];
@@ -48,12 +47,23 @@ exports.find_all = (req, res, next) => {
         });
 };
 
+exports.find_by_id = (req, res, next) => {
+    const tagService = new TagService();
+    tagService.findById(req.params.id).then(function (tag) {
+        res.json(tag);
+    },function (err) {
+        res.json(err);
+    });
+};
+
+
 exports.find_one = [
-    body('context').isLength({ min: 1 }).trim().withMessage('tag name must be specified.'),
-    sanitizeBody('context').trim().escape(),
+    // body('payload').isLength({ min: 1 }).trim().withMessage('tag name must be specified.'),
+    // sanitizeBody('payload').trim().escape(),
     (req, res, next) => {
         const tagService = new TagService();
-        tagService.findOne(req.body.context)
-            .then()
+        res.json(req.body);
+        // tagService.findOne(req.body.context)
+        //     .then()
     }
 ]

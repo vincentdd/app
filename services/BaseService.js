@@ -86,7 +86,23 @@ class BaseService {
         }
     }
 
-
+    /**
+     * 根据_id查找
+     *
+     * @param condition _id
+     * @param constraints 查找配置
+     * @returns {Promise}
+     */
+    async findById(condition, constraints) {
+        try {
+            let data = await this.Model.findById(condition, constraints ? constraints : null);
+            console.log('findById success--> ', condition);
+            return data;
+        } catch (error) {
+            console.log(`findById error--> ${error}`);
+            return error;
+        }
+    }
     /**
      * 查找排序之后的第一条
      *
