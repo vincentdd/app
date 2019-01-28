@@ -49,6 +49,7 @@ exports.find_all = (req, res, next) => {
 
 exports.find_by_id = (req, res, next) => {
     const tagService = new TagService();
+    console.log(req.params.id);
     tagService.findById(req.params.id).then(function (tag) {
         res.json(tag);
     },function (err) {
