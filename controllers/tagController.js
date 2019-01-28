@@ -57,6 +57,23 @@ exports.find_by_id = (req, res, next) => {
     });
 };
 
+exports.tag_update = [
+    body('context').isLength({ min: 1 }).trim().withMessage('tag name must be specified.'),
+    sanitizeBody('context').trim().escape(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.json({errors: errors.mapped()});
+            return;
+        }
+        if(req.params.id){
+            const tagService = new TagService();
+            tagService.update()
+        }
+    }
+];
+
+
 
 exports.find_one = [
     // body('payload').isLength({ min: 1 }).trim().withMessage('tag name must be specified.'),
