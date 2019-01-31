@@ -49,6 +49,7 @@ exports.find_all = (req, res, next) => {
 
 exports.find_by_id = (req, res, next) => {
     const tagService = new TagService();
+    console.log(req.params.id);
     tagService.findById(req.params.id).then(function (tag) {
         res.json(tag);
     },function (err) {
@@ -67,7 +68,17 @@ exports.tag_update = [
         }
         if(req.params.id){
             const tagService = new TagService();
-            tagService.update()
+            const conditions = {_id: req.params.id},
+                tag = {context: req.body.context};
+            tagService.update(conditions, tag).then(
+                function (docs) {
+                    console.log('-------------------------success!---------------------------')
+                    res.json(docs);
+                },function (err) {
+                    console.log('-------------------------faild!---------------------------')
+                    res.json(err);
+                }
+            )
         }
     }
 ];
