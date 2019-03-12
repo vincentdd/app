@@ -133,7 +133,7 @@ class BaseService {
      */
     async update(condition, updater) {
         try {
-            let result = await this.Model.update(condition, updater);
+            let result = await this.Model.updateOne(condition, updater);
             return result;
         } catch (error) {
             console.log(`update error--> ${error}`);
