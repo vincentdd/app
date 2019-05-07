@@ -18,7 +18,8 @@ var app = express();
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://vincedd:1118@piggybank-shard-00-00-cwj1z.mongodb.net:27017,piggybank-shard-00-01-cwj1z.mongodb.net:27017,piggybank-shard-00-02-cwj1z.mongodb.net:27017/test?ssl=true&replicaSet=piggybank-shard-0&authSource=admin&retryWrites=true';
+var mongoDB = 'mongodb://localhost/piggybank';
+//var mongoDB = 'mongodb://vincedd:1118@piggybank-shard-00-00-cwj1z.mongodb.net:27017,piggybank-shard-00-01-cwj1z.mongodb.net:27017,piggybank-shard-00-02-cwj1z.mongodb.net:27017/test?ssl=true&replicaSet=piggybank-shard-0&authSource=admin&retryWrites=true';
 const options = {
     useNewUrlParser: true,
     useCreateIndex: true,
