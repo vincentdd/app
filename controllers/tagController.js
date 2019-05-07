@@ -70,15 +70,12 @@ exports.tag_update = [
             const tagService = new TagService();
             const conditions = {_id: req.params.id},
                 tag = {context: req.body.context};
-            tagService.update(conditions, tag).then(
-                function (docs) {
-                    console.log('-------------------------success!---------------------------')
-                    res.json(docs);
-                },function (err) {
-                    console.log('-------------------------faild!---------------------------')
-                    res.json(err);
-                }
-            )
+            tagService.update(conditions, tag, {multi: true}, function(err, docs){
+                if(err)
+                    console.log(err);
+                else
+                    console.log('更改成功：' + docs);
+            })
         }
     }
 ];

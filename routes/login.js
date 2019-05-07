@@ -8,6 +8,6 @@ router.get('/', function(req, res) {
     res.sendfile('./public/login.html');
 });
 
-router.post('/', user_controller.sign_up);
+router.post('/', user_controller.sign_in);
 
 module.exports = router;

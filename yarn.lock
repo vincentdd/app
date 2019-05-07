@@ -128,6 +128,10 @@ async@2.6.1:
 async@^1.5.0:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
+<<<<<<< HEAD
+=======
+  integrity sha1-7GphrlZIDAw8skHJVhjiCJL5Zyo=
+>>>>>>> d790eb796ba7ee541d70ec33fa27bb7458b9d8f2
 
 atob@^2.1.1:
   version "2.1.2"
@@ -544,6 +548,10 @@ duplexer@~0.1.1:
 ecdsa-sig-formatter@1.0.11:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.11.tgz#ae0f0fa2d85045ef14a817daa3ce9acd0489e5bf"
+<<<<<<< HEAD
+=======
+  integrity sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==
+>>>>>>> d790eb796ba7ee541d70ec33fa27bb7458b9d8f2
   dependencies:
     safe-buffer "^5.0.1"
 
@@ -610,6 +618,10 @@ expand-brackets@^2.1.4:
 express-jwt@^5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/express-jwt/-/express-jwt-5.3.1.tgz#66f05c7dddb5409c037346a98b88965bb10ea4ae"
+<<<<<<< HEAD
+=======
+  integrity sha512-1C9RNq0wMp/JvsH/qZMlg3SIPvKu14YkZ4YYv7gJQ1Vq+Dv8LH9tLKenS5vMNth45gTlEUGx+ycp9IHIlaHP/g==
+>>>>>>> d790eb796ba7ee541d70ec33fa27bb7458b9d8f2
   dependencies:
     async "^1.5.0"
     express-unless "^0.3.0"
@@ -619,6 +631,10 @@ express-jwt@^5.3.1:
 express-unless@^0.3.0:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/express-unless/-/express-unless-0.3.1.tgz#2557c146e75beb903e2d247f9b5ba01452696e20"
+<<<<<<< HEAD
+=======
+  integrity sha1-JVfBRudb65A+LSR/m1ugFFJpbiA=
+>>>>>>> d790eb796ba7ee541d70ec33fa27bb7458b9d8f2
 
 express-validator@^5.3.0:
   version "5.3.0"
@@ -1103,6 +1119,10 @@ js-stringify@^1.0.1:
 jsonwebtoken@^8.1.0, jsonwebtoken@^8.5.1:
   version "8.5.1"
   resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-8.5.1.tgz#00e71e0b8df54c2121a1f26137df2280673bcc0d"
+<<<<<<< HEAD
+=======
+  integrity sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==
+>>>>>>> d790eb796ba7ee541d70ec33fa27bb7458b9d8f2
   dependencies:
     jws "^3.2.2"
     lodash.includes "^4.3.0"
@@ -1125,6 +1145,10 @@ jstransformer@1.0.0:
 jwa@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/jwa/-/jwa-1.4.1.tgz#743c32985cb9e98655530d53641b66c8645b039a"
+<<<<<<< HEAD
+=======
+  integrity sha512-qiLX/xhEEFKUAJ6FiBMbes3w9ATzyk5W7Hvzpa/SLYdxNtng+gcurvrI7TbACjIXlsJyr05/S1oUhZrc63evQA==
+>>>>>>> d790eb796ba7ee541d70ec33fa27bb7458b9d8f2
   dependencies:
     buffer-equal-constant-time "1.0.1"
     ecdsa-sig-formatter "1.0.11"
@@ -1133,6 +1157,10 @@ jwa@^1.4.1:
 jws@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/jws/-/jws-3.2.2.tgz#001099f3639468c9414000e99995fa52fb478304"
+<<<<<<< HEAD
+=======
+  integrity sha512-YHlZCB6lMTllWDtSPHz/ZXTsi8S00usEV6v1tjq8tOUZzw7DpSDWVXjXDre6ed1w/pd495ODpHZYSdkRTsa0HA==
+>>>>>>> d790eb796ba7ee541d70ec33fa27bb7458b9d8f2
   dependencies:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
@@ -1210,6 +1238,11 @@ lodash.once@^4.0.0:
 lodash.set@^4.0.0:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
+
+lodash.set@^4.0.0:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
+  integrity sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=
 
 lodash@^4.17.10, lodash@^4.17.4:
   version "4.17.11"
@@ -1920,6 +1953,11 @@ semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.5.0:
 semver@^5.6.0:
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.0.tgz#790a7cf6fea5459bac96110b29b60412dc8ff96b"
+
+semver@^5.6.0:
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.0.tgz#790a7cf6fea5459bac96110b29b60412dc8ff96b"
+  integrity sha512-Ya52jSX2u7QKghxeoFGpLwCtGlt7j0oY9DYb5apt9nPlJ42ID+ulTXESnt/qAQcoSERyZ5sl3LDIOw0nAn/5DA==
 
 send@0.16.2:
   version "0.16.2"
