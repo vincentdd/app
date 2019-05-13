@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var morgan = require("morgan");
-let jwt = require("jsonwebtoken");
+let jwt = require("express-jwt");
 
 var indexRouter = require('./routes/index');
 // const loginRouter = require('./routes/login');
@@ -154,6 +154,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(jwt({ secret: 'glgjscyqyhfbqz'}).unless({path: ['/login', '/register']}));
 app.use('/', indexRouter);
 app.get('/',
     jwt({secret: 'shhhhhhared-secret'}),
