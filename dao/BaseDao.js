@@ -73,7 +73,8 @@ class BaseDao {
      */
     async findOne(condition, constraints) {
         try {
-            let data = await this.Model.findOne(condition, constraints ? constraints : null);
+            let data = await this.Model.findOne(condition, constraints ? constraints : null).orFail(() => Error('Not found'));
+            console.log(`findOne success--> ${data}`);
             return data;
         } catch (error) {
             console.log(`findOne error--> ${error}`);

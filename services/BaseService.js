@@ -57,7 +57,7 @@ class BaseService {
         try {
             console.log(condition);
             // console.log(this.Model);
-            let data = await this.Model.find(condition, constraints ? constraints : null);
+            let data = await this.Model.find(condition, constraints ? constraints : null).orFail(() => Error('not found'));
             // let data = await this.Model.find();
             console.log('findAll success--> ', data);
             return data;
@@ -76,14 +76,19 @@ class BaseService {
      * @returns {Promise}
      */
     async findOne(condition, constraints) {
-        try {
-            let data = await this.Model.findOne(condition, constraints ? constraints : null);
-            console.log('findOne success--> ', condition, data);
-            return data;
-        } catch (error) {
-            console.log(`findOne error--> ${error}`);
-            return error;
-        }
+        // console.log(this.Model.findOne(condition).orFail);
+        // new Error('User not found')
+        // try {
+        //     let data = await this.Model.findOne(condition, constraints ? constraints : null).orFail(() => Error('Not found'));
+        //     console.log('findOne success--> ', condition, data);
+        //     return data;
+        // } catch (error) {
+        //     console.log(`findOne error--> ${error}`);
+        //     return error;
+        // }
+        let data = await this.Model.findOne(condition, constraints ? constraints : null).orFail(() => Error('Not found'));
+        console.log(`findOne success--> ${data}`);
+        return data;
     }
 
     /**
@@ -95,7 +100,7 @@ class BaseService {
      */
     async findById(condition, constraints) {
         try {
-            let data = await this.Model.findById(condition, constraints ? constraints : null);
+            let data = await this.Model.findById(condition, constraints ? constraints : null).orFail(() => Error('Not found'));
             console.log('findById success--> ', condition);
             return data;
         } catch (error) {

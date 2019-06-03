@@ -4,8 +4,8 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var morgan = require("morgan");
-let jwt = require("express-jwt");
+var morgan = require('morgan');
+let jwtAuth =require('./utils/jwtAuth');
 
 var indexRouter = require('./routes/index');
 // const loginRouter = require('./routes/login');
@@ -154,14 +154,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(jwt({ secret: 'glgjscyqyhfbqz'}).unless({path: ['/login', '/register']}));
+app.use(jwtAuth);
 app.use('/', indexRouter);
-app.get('/',
-    jwt({secret: 'shhhhhhared-secret'}),
-    function(req, res) {
-        if (!req.user.admin) return res.sendStatus(401);
-        res.sendStatus(200);
-    });
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

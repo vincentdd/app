@@ -2,7 +2,9 @@ const User = require('../models/user');
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const UserService = require('../services/UserService');
-const jwt = require('express-jwt');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const constant = require('../utils/constant');
 
 exports.sign_up = [
     body('username').isLength({ min: 1 }).trim().withMessage('user name must be specified.')
@@ -14,10 +16,8 @@ exports.sign_up = [
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // There are errors. Render form again with sanitized values/errors messages.
-            //res.render('user_form', { title: 'Create User', author: req.body, errors: errors.array() });
             const msg = errors.mapped();
-            console.log(`1${msg.password.msg}`);
+            console.log(`${msg.password.msg}`);
             let temp = msg.username || msg.password;
             console.log(temp);
             const responseData = {
@@ -28,38 +28,29 @@ exports.sign_up = [
             res.json(responseData);
             return;
         }else {
-            User.find({username:  req.body.username})
-                .then(function (_user) {
-                    if(_user.length !== 0) {
-                        const responseData = {
-                            ...res.locals.responseData,
-                            code: -2,
-                            message: "Username is already taken"
-                        };
-                        res.json(responseData);
-                        // res.send('' + _user.length);
-                        return;
-                    }else{
-                        const user = new User({
-                            username: req.body.username,
-                            password: req.body.password
-                        });
-                        const userService = new UserService();
-                        userService.register(user);
-                        // user.save(function (err, doc) {
-                        //     if (err) {
-                        //         console.log(`error:${err}`)
-                        //     } else {
-                        //         console.log(doc)
-                        //     }
-                        // })
-                        const responseData = {
-                            ...res.locals.responseData,
-                            code: 0,
-                            message: "success"
-                        };
-                        res.json(responseData);
-                    }
+            const userService = new UserService();
+            userService.findOne({username:  req.body.username})
+                .then(function (user) {
+                    console.log(`sign up ${user}`);
+                    const responseData = {
+                        ...res.locals.responseData,
+                        code: -2,
+                        message: "Username is already taken"
+                    };
+                    res.json(responseData);
+                    // res.send('' + _user.length);
+                    return;
+                },function(err){
+                    let pwd = req.body.password,
+                        { password, privateKey } = constant.getHash(pwd);
+                    const user = { username: req.body.username, password: password, privateKey: privateKey };
+                    userService.save(user);
+                    const responseData = {
+                        ...res.locals.responseData,
+                        code: 0,
+                        message: "success"
+                    };
+                    res.json(responseData);
                 });
         }
     }
@@ -77,7 +68,7 @@ exports.sign_in = [
         let responseData = { ...res.locals.responseData };
         if (!errors.isEmpty()) {
             const msg = errors.mapped();
-            console.log(`1${msg.password.msg}`);
+            console.log(`login error:${msg.password.msg}`);
             let temp = msg.username || msg.password;
             console.log(temp);
             responseData = {
@@ -88,33 +79,27 @@ exports.sign_in = [
             res.json(responseData);
             return;
         }else {
-            User.find({username: req.body.username})
-                .then(function (err, user) {
-                    if(err){
+            const userService = new UserService();
+            userService.findOne({username:  req.body.username, password:req.body.password})
+                .then(function (user) {
+                    let token = jwt.sign({ foo: 'bar' }, 'Why_So_Serious', {
+                        expiresIn : '1d', // 授权时效1天
+                    });
+                    console.log(`1:${user}`);
+                    if (user)
                         responseData = {
                             ...responseData,
-                            code: -4,
+                            code: 0,
+                            message: 'success',
+                            token: token
+                        };
+                    res.json(responseData);
+                },function (err){
+                        responseData = {
+                            ...responseData,
+                            code: -5,
                             message: 'Username or password is incorrect'
                         };
-                    }else{
-                        const {username, password}= user[0];
-                        if(password === req.body.password){
-                            const token = jwt.sign(user,  {
-                                expiresIn : 60*60*24// 授权时效24小时
-                            });
-                            res.json({
-                                success: true,
-                                message: '请使用您的授权码',
-                                token: token
-                            });
-                        }else{
-                            responseData = {
-                                ...responseData,
-                                code: -5,
-                                message: 'Username or password is incorrect'
-                            }
-                        }
-                    }
                     res.json(responseData);
                 });
             return;
