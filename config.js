@@ -2,5 +2,5 @@ module.exports = {
     'network' : {
         'port':8080
     },
-    'jwtsecret': 'vincent'
+    'jwtsecret': 'Why_So_Serious'
 };

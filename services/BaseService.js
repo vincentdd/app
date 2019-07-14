@@ -1,3 +1,6 @@
+const UserException = require('../utils/exception');
+const { CODE_FAILED, MES_FAILED } = require('../utils/response');
+
 class BaseService {
     /**
      * 子类构造传入对应的 Model 类
@@ -41,7 +44,7 @@ class BaseService {
             return result;
         } catch (error) {
             console.log('save error--> ', error);
-            return error;
+            throw new UserException({code: CODE_FAILED, message: MES_FAILED});
         }
     }
 
@@ -55,7 +58,7 @@ class BaseService {
      */
     async findAll(condition, constraints) {
         try {
-            console.log(condition);
+            console.log(`this is condition of find all ${condition.toString()}`);
             // console.log(this.Model);
             let data = await this.Model.find(condition, constraints ? constraints : null).orFail(() => Error('not found'));
             // let data = await this.Model.find();
@@ -63,7 +66,8 @@ class BaseService {
             return data;
         } catch (error) {
             console.log('findAll error--> ', error);
-            return error;
+            // return error;
+            throw new UserException({code: CODE_FAILED, message: MES_FAILED});
         }
     }
 
@@ -138,11 +142,14 @@ class BaseService {
      */
     async update(condition, updater) {
         try {
-            let result = await this.Model.updateOne(condition, updater);
-            return result;
+            console.log(`this is update--------------------> ${condition}${updater}`);
+            let result = await this.Model.updateOne(condition, updater, {multi: false});
+            console.log(result.n);
+            console.log(result.nModified);
+            return true;
         } catch (error) {
             console.log(`update error--> ${error}`);
-            return error;
+            return false;
         }
     }
 

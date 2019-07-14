@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
+const tag_controller = require('../controllers/tagController');
 
 /* GET home page. */
-router.get('/', function(req, res) {
-  res.redirect('/catalog');
-});
+// router.get('/', function(req, res) {
+//   res.redirect('/catalog');
+// });
 
 let responseData;
 router.use((req, res, next) => {

@@ -41,7 +41,7 @@ class BaseDao {
             return result;
         } catch (error) {
             console.log('save error--> ', error);
-            return error;
+            throw '保存失败';
         }
     }
 

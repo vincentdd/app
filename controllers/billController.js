@@ -2,15 +2,17 @@ const Bill = require('../models/bill');
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const BillService = require('../services/BillService');
-const { CODE_SUCCESS, CODE_FAILED, MES_SUCCESS, MES_NOT_FOUND, MES_FAILED } = require('../utils/response');
+const { CODE, MESSAGE } = require('../utils/response');
 
 exports.add_bill = [
     body('name').isLength({ min: 1 }).trim().withMessage('name must be specified.'),
     body('price').isLength({ min: 1 }).trim().withMessage('price must be specified.'),
-    body('tagId').isLength({ min: 1 }).trim().withMessage('tagId must be specified.'),
+    body('tagID').isLength({ min: 1 }).trim().withMessage('tagId must be specified.'),
+    body('userID').isLength({ min: 1 }).trim().withMessage('tagId must be specified.'),
     sanitizeBody('name').trim().escape(),
     sanitizeBody('price').trim().escape(),
-    sanitizeBody('tagId').trim().escape(),
+    sanitizeBody('tagID').trim().escape(),
+    sanitizeBody('userID').trim().escape(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -19,23 +21,66 @@ exports.add_bill = [
         }else {
             const billService = new BillService();
             const bill = new Bill({
-                name: req.body.name,
-
-                tagId: req.body.tagId
+                context: req.body.name,
+                price: req.body.price,
+                tagID: req.body.tagID,
+                userID: req.body.userID,
+                updated : req.body.updated
             });
             billService.save(bill).then(function (result) {
-                res.send({res_code: CODE_SUCCESS, msg: MES_SUCCESS, payload: tag});
+                res.send({res_code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS, payload: result});
             }, function (result) {
-                res.send({res_code: CODE_FAILED, msg: MES_FAILED, payload: result});
+                res.send({res_code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED, payload: result});
             });
+            return;
         }
     }
 ];
 
-exports.find_all = [];
+exports.find_all = (req, res, next) => {
+    const billService = new BillService();
+    billService.findAll({})
+        .then(function(_resule) {
+            console.log(_resule.length);
+            res.json({code: CODE.CODE_SUCCESS, payload: {..._resule}, msg: MESSAGE.MES_SUCCESS});
+        },function (err) {
+            res.json({code: CODE.CODE_FAILED, payload: null, msg: MESSAGE.MES_NOT_FOUND});
+        });
+};
 
-exports.find_by_id = (req, res, next) => {};
+exports.find_by_id = (req, res, next) => {
+    const billService = new BillService();
+    console.log(`find by id: ${req.params.id}S`);
+    billService.findById(req.params.id).then(function (bill) {
+        res.json(bill);
+    },function (err) {
+        res.json(err);
+    });
+};
 
-exports.bill_update = [];
+exports.bill_update = [
+    body('context').isLength({ min: 1 }).trim().withMessage('tag name must be specified.'),
+    sanitizeBody('context').trim().escape(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.json({errors: errors.mapped()});
+            return;
+        }
+        if(req.params.id){
+            const billService = new BillService();
+            const conditions = {_id: req.params.id},
+                bill = {context: req.body.context};
+
+            billService.update(conditions, bill).then(function(temp){
+                console.log('更新成功：' + temp);
+                res.json({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS});
+            },function(err){
+                console.log('更新失败：' + err);
+                res.json({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED});
+            })
+        }
+    }
+];
 
 exports.find_one = [];

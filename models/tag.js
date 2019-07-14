@@ -4,7 +4,8 @@ const ObjectId = Schema.ObjectId;
 
 const TagSchema = new Schema({
     context: {type: String, required: true},
-    tagId: {type: ObjectId }
+    tagId: {type: ObjectId },
+    userId: {type: ObjectId}
 });
 
 TagSchema

@@ -4,7 +4,10 @@ const { sanitizeBody } = require('express-validator/filter');
 const UserService = require('../services/UserService');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const constant = require('../utils/constant');
+const config = require('../config');
+const Constant = require('../utils/constant');
+const { CODE, MESSAGE } = require('../utils/response');
+const userException = require('../utils/exception');
 
 exports.sign_up = [
     body('username').isLength({ min: 1 }).trim().withMessage('user name must be specified.')
@@ -31,7 +34,7 @@ exports.sign_up = [
             const userService = new UserService();
             userService.findOne({username:  req.body.username})
                 .then(function (user) {
-                    console.log(`sign up ${user}`);
+                    // console.log(`sign up ${user}`);
                     const responseData = {
                         ...res.locals.responseData,
                         code: -2,
@@ -41,16 +44,27 @@ exports.sign_up = [
                     // res.send('' + _user.length);
                     return;
                 },function(err){
-                    let pwd = req.body.password,
-                        { password, privateKey } = constant.getHash(pwd);
-                    const user = { username: req.body.username, password: password, privateKey: privateKey };
-                    userService.save(user);
-                    const responseData = {
-                        ...res.locals.responseData,
-                        code: 0,
-                        message: "success"
-                    };
-                    res.json(responseData);
+                    let user = {username: req.body.username, password: req.body.password},
+                        constant = new Constant(user),
+                        { username, password, privateKey } = constant.getPrivateKey().getHash().user;
+                    user = { username: username, password: password, privateKey: privateKey };
+                    console.log(user);
+                    let saveDone = userService.save(user);
+                    saveDone.then(() => {
+                        const responseData = {
+                            ...res.locals.responseData,
+                            code: 0,
+                            message: MESSAGE.MES_SUCCESS
+                        };
+                        res.json(responseData);
+                    }, () => {
+                        const responseData = {
+                            ...res.locals.responseData,
+                            code: -1,
+                            message: MESSAGE.MES_FAILED
+                        };
+                        res.json(responseData);
+                    });
                 });
         }
     }
@@ -80,20 +94,30 @@ exports.sign_in = [
             return;
         }else {
             const userService = new UserService();
-            userService.findOne({username:  req.body.username, password:req.body.password})
+            userService.findOne({username:  req.body.username})
                 .then(function (user) {
-                    let token = jwt.sign({ foo: 'bar' }, 'Why_So_Serious', {
-                        expiresIn : '1d', // 授权时效1天
-                    });
-                    console.log(`1:${user}`);
-                    if (user)
+                    let obj = {username: req.body.username, password: req.body.password, privateKey: user.privateKey},
+                        constant = new Constant(obj);
+                    if(constant.getHash().compareUser(user)){
+                        let token = jwt.sign({ foo: 'bar' }, config.jwtsecret, {
+                            expiresIn : '1d', // 授权时效1天
+                        });
                         responseData = {
                             ...responseData,
                             code: 0,
-                            message: 'success',
-                            token: token
+                            message: MESSAGE.MES_SUCCESS,
+                            token: token,
+                            uid: user._id
                         };
-                    res.json(responseData);
+                        res.json(responseData);
+                    }else{
+                        responseData = {
+                            ...responseData,
+                            code: -1,
+                            message: MESSAGE.MES_FAILED,
+                        };
+                        res.json(responseData);
+                    }
                 },function (err){
                         responseData = {
                             ...responseData,

@@ -2,11 +2,13 @@ const Tag = require('../models/tag');
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const TagService = require('../services/TagService');
-const { CODE_SUCCESS, CODE_FAILED, MES_SUCCESS, MES_NOT_FOUND, MES_FAILED } = require('../utils/response');
+const { CODE, MESSAGE } = require('../utils/response');
 
 exports.add_tag = [
     body('context').isLength({ min: 1 }).trim().withMessage('tag name must be specified.'),
+    body('userId').isLength({ min: 1 }).trim().withMessage('userId must be specified.'),
     sanitizeBody('context').trim().escape(),
+    sanitizeBody('userId').trim().escape(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -16,19 +18,18 @@ exports.add_tag = [
             const tagService = new TagService();
             tagService.findOne({'context':  req.body.context})
                 .then(function (_context) {
-                    if(_context){
-                        console.log(_context);
-                        res.send({res_code: CODE_FAILED, msg:'tag is already exists', payload: _context});
-                    }else{
-                        const tag = new Tag({
-                            context: req.body.context,
-                        });
-                        tagService.save(tag).then(function(result){
-                            res.send({res_code: CODE_SUCCESS, msg: MES_SUCCESS, payload: tag});
-                        },function (result) {
-                            res.send({res_code: CODE_FAILED, msg: MES_FAILED, payload: result});
-                        });
-                    }
+                    console.log(_context);
+                    res.send({code: CODE.CODE_FAILED, msg:'tag is already exists', payload: _context});
+                },function (err) {
+                    const tag = new Tag({
+                        context: req.body.context,
+                        userId: req.body.userId
+                    });
+                    tagService.save(tag).then(function(result){
+                        res.send({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS, payload: tag});
+                    },function (result) {
+                        res.send({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED, payload: result});
+                    });
                 });
         }
     }
@@ -36,20 +37,20 @@ exports.add_tag = [
 
 exports.find_all = (req, res, next) => {
     const tagService = new TagService();
-    tagService.findAll()
+    tagService.findAll({})
         .then(function(_resule) {
             if(_resule.length !== 0) {
                 console.log(_resule);
-                res.send({res_code: CODE_SUCCESS, payload: {..._resule}, msg: MES_SUCCESS});
+                res.send({code: CODE.CODE_SUCCESS, payload: {..._resule}, msg: MESSAGE.MES_SUCCESS});
             } else {
-                res.send({res_code: CODE_FAILED, payload:{}, msg: MES_NOT_FOUND});
+                res.send({code: CODE.CODE_FAILED, payload:{}, msg: MESSAGE.MES_NOT_FOUND});
             }
         });
 };
 
 exports.find_by_id = (req, res, next) => {
     const tagService = new TagService();
-    console.log(req.params.id);
+    console.log(`find by id: ${req.params.id}S`);
     tagService.findById(req.params.id).then(function (tag) {
         res.json(tag);
     },function (err) {
@@ -70,11 +71,13 @@ exports.tag_update = [
             const tagService = new TagService();
             const conditions = {_id: req.params.id},
                 tag = {context: req.body.context};
-            tagService.update(conditions, tag, {multi: true}, function(err, docs){
-                if(err)
-                    console.log(err);
-                else
-                    console.log('更改成功：' + docs);
+
+            tagService.update(conditions, tag).then(function(temp){
+                console.log('更新成功：' + temp);
+                res.json({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS});
+            },function(err){
+                console.log('更新失败：' + err);
+                res.json({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED});
             })
         }
     }
