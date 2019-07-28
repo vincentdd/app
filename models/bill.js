@@ -6,8 +6,9 @@ var BillSchema = new Schema({
     context: String,
     price: String,
     tagID: {type: ObjectId, ref: 'Tag', required: true},
-    userID: {type: ObjectId, ref: 'User', required: true}
-    // dateTime
+    userID: {type: ObjectId, ref: 'User', required: true},
+    createDate: Date,
+    updated: Date
 });
 
 BillSchema
