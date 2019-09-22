@@ -48,6 +48,24 @@ class BaseService {
         }
     }
 
+    /**
+     * 插入多个 docs
+     *
+     *
+     *
+     */
+    async insertMany(arr) {
+        let entity = this.Model;
+        try {
+            console.log(entity.findOne === undefined);
+            console.log(entity.insertMany === undefined);
+            let result = await entity.insertMany(arr);
+            return result;
+        } catch (error) {
+            console.log('save error--> ', error);
+            throw new UserException({code: CODE_FAILED, message: MES_FAILED});
+        }
+    }
 
     /**
      * 查询所有符合条件 docs

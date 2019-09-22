@@ -5,8 +5,8 @@ const ObjectId = Schema.ObjectId;
 var BillSchema = new Schema({
     context: String,
     price: String,
-    tagID: {type: ObjectId, ref: 'Tag', required: true},
-    userID: {type: ObjectId, ref: 'User', required: true},
+    tagID: {type: ObjectId, ref: 'Tag', required: false},
+    userID: {type: ObjectId, ref: 'User', required: false},
     createDate: Date,
     updated: Date
 });
