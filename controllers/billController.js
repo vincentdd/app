@@ -85,8 +85,10 @@ exports.find_by_id = (req, res, next) => {
 };
 
 exports.bill_update = [
-    body('context').isLength({min: 1}).trim().withMessage('tag name must be specified.'),
+    body('context').isLength({min: 1}).trim().withMessage('context must be specified.'),
     sanitizeBody('context').trim().escape(),
+    body('price').isLength({min: 1}).trim().withMessage('price must be specified.'),
+    sanitizeBody('price').trim().escape(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -96,7 +98,7 @@ exports.bill_update = [
         if (req.params.id) {
             const billService = new BillService();
             const conditions = {_id: req.params.id},
-                bill = {context: req.body.context, updated: Date.now()};
+                bill = {context: req.body.context, price: req.body.price, updated: Date.now()};
             billService.update(conditions, bill).then(function (temp) {
                 console.log('更新成功：' + temp);
                 res.json({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS});
