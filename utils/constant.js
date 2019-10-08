@@ -4,14 +4,16 @@ class Constant {
     constructor(User) {
         this.user = User;
     }
-    getPrivateKey(){
+
+    getPrivateKey() {
         let temp = Date.now().toString(),
             hash = crypto.createHash('sha256');
 
         this.user.privateKey = hash.update(temp).digest('hex');
         return this;
     }
-    getHash(){
+
+    getHash() {
         let {privateKey, password} = this.user,
             hmac = crypto.createHmac('sha256', privateKey);
 
@@ -19,7 +21,8 @@ class Constant {
         console.log(`the input username${this.user.username},password${this.user.password}`);
         return this;
     }
-    compareUser(obj){
+
+    compareUser(obj) {
         return this.user.username === obj.username && this.user.password === obj.password;
     }
 }
@@ -40,4 +43,5 @@ module.exports = Constant;
 //     },
 //     secretKey: 'Why_So_Serious'
 // };
+
 
