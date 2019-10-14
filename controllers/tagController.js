@@ -41,9 +41,9 @@ exports.find_all = (req, res, next) => {
         .then(function(_resule) {
             if(_resule.length !== 0) {
                 console.log(_resule);
-                res.send({code: CODE.CODE_SUCCESS, payload: {..._resule}, msg: MESSAGE.MES_SUCCESS});
+                res.send({code: CODE.CODE_SUCCESS, payload: [..._resule], msg: MESSAGE.MES_SUCCESS});
             } else {
-                res.send({code: CODE.CODE_FAILED, payload:{}, msg: MESSAGE.MES_NOT_FOUND});
+                res.send({code: CODE.CODE_FAILED, payload:[], msg: MESSAGE.MES_NOT_FOUND});
             }
         });
 };
