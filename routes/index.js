@@ -21,6 +21,7 @@ router.use((req, res, next) => {
 
 router.use('/tags', require('./tags'));
 router.use('/bills', require('./bills'));
+router.use('/bill', require('./bill'));
 router.use('/login', require('./login'));
 router.use('/register', require('./register'));
 

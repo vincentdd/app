@@ -7,14 +7,14 @@ const {CODE, MESSAGE} = require('../utils/response');
 exports.add_bill = [
     body('name').isLength({min: 1}).trim().withMessage('name must be specified.'),
     body('price').isLength({min: 1}).trim().withMessage('price must be specified.'),
-    body('tagID').isLength({min: 1}).trim().withMessage('tagId must be specified.'),
-    body('userID').isLength({min: 1}).trim().withMessage('tagId must be specified.'),
-    body('updated').isLength({min: 1}).trim().withMessage('tagId must be specified.'),
+    body('tagID').isLength({min: 1}).trim().withMessage('tagID must be specified.'),
+    body('userID').isLength({min: 1}).trim().withMessage('userID must be specified.'),
+    body('createDate').isLength({min: 1}).trim().withMessage('createDate must be specified.'),
     sanitizeBody('name').trim().escape(),
     sanitizeBody('price').trim().escape(),
     sanitizeBody('tagID').trim().escape(),
     sanitizeBody('userID').trim().escape(),
-    sanitizeBody('updated').trim().escape(),
+    sanitizeBody('createDate').trim().escape(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -27,7 +27,7 @@ exports.add_bill = [
                 price: req.body.price,
                 tagID: req.body.tagID,
                 userID: req.body.userID,
-                createDate: req.body.updated,
+                createDate: req.body.createDate,
                 updated: Date.now()
             });
             billService.save(bill).then(function (result) {
@@ -89,6 +89,10 @@ exports.bill_update = [
     sanitizeBody('context').trim().escape(),
     body('price').isLength({min: 1}).trim().withMessage('price must be specified.'),
     sanitizeBody('price').trim().escape(),
+    body('tagID').isLength({min: 1}).trim().withMessage('tagID must be specified.'),
+    sanitizeBody('tagID').trim().escape(),
+    body('userID').isLength({min: 1}).trim().withMessage('userID must be specified.'),
+    sanitizeBody('userID').trim().escape(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -98,7 +102,13 @@ exports.bill_update = [
         if (req.params.id) {
             const billService = new BillService();
             const conditions = {_id: req.params.id},
-                bill = {context: req.body.context, price: req.body.price, updated: Date.now()};
+                bill = {
+                    context: req.body.context,
+                    price: req.body.price,
+                    tagID: req.body.tagID,
+                    userID: req.body.userID,
+                    updated: Date.now()
+                };
             billService.update(conditions, bill).then(function (temp) {
                 console.log('更新成功：' + temp);
                 res.json({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS});

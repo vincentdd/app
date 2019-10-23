@@ -9,9 +9,9 @@ router.post('/lists', bill_controller.add_bill_list);
 
 // router.get('/:id', tag_controller.find_by_id);
 
-router.route('/:id')
-    .get(bill_controller.find_by_id)
-    .put(bill_controller.bill_update);
+// router.route('/:id')
+//     .get(bill_controller.find_by_id)
+//     .put(bill_controller.bill_update);
 
 // router.post('', tag_controller.find_one);
 module.exports = router;
