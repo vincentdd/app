@@ -19,7 +19,7 @@ var app = express();
 //Set up mongoose connection
 var mongoose = require('mongoose');
 //var mongoDB = 'mongodb://localhost/piggybank';
-var mongoDB = 'mongodb://vincedd:1118@piggybank-shard-00-00-cwj1z.mongodb.net:27017,piggybank-shard-00-01-cwj1z.mongodb.net:27017,piggybank-shard-00-02-cwj1z.mongodb.net:27017/test?ssl=true&replicaSet=piggybank-shard-0&authSource=admin&retryWrites=true';
+var mongoDB = 'mongodb+srv://vincedd:1118@piggybank-cwj1z.azure.mongodb.net/test?retryWrites=true&w=majority';
 const options = {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -154,7 +154,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use(jwtAuth);
+//app.use(jwtAuth);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

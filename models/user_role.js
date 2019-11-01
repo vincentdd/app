@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var UserRoleSchema = new Schema({
-    userID: {type: String, required: true},
-    roleID: {type: String, required: true},
+    userID: {type: ObjectId,ref: 'User', required: true},
+    roleID: {type: ObjectId,ref: 'Role'},
     create_time: Date,
     updated: Date
 });
