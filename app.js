@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
+let mongoose = require('mongoose');
+
 let jwtAuth =require('./utils/jwtAuth');
 
 var indexRouter = require('./routes/index');
@@ -17,9 +19,8 @@ var app = express();
 
 
 //Set up mongoose connection
-var mongoose = require('mongoose');
 //var mongoDB = 'mongodb://localhost/piggybank';
-var mongoDB = 'mongodb+srv://vincedd:1118@piggybank-cwj1z.azure.mongodb.net/test?retryWrites=true&w=majority';
+let mongoDB = 'mongodb+srv://vincedd:1118@piggybank-cwj1z.azure.mongodb.net/Piggybank?retryWrites=true&w=majority';
 const options = {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -44,8 +45,7 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-//node populatedb "mongodb://vincedd:1118@piggybank-shard-00-00-cwj1z.mongodb.net:27017,piggybank-shard-00-01-cwj1z.mongodb.net:27017,piggybank-shard-00-02-cwj1z.mongodb.net:27017/test?ssl=true&replicaSet=piggybank-shard-0&authSource=admin&retryWrites=true"
-
+// 'mongodb+srv://vincedd:1118@piggybank-cwj1z.azure.mongodb.net/test?retryWrites=true&w=majority'
 //**********************
 // app.use(morgan("dev"));
 // app.use(function(req, res, next) {

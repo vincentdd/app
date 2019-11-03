@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
 
 var Role_PermissionSchema = new Schema({
-    permissionID: {type: ObjectId, ref: 'Permission'},
-    roleID: {type: ObjectId, ref: 'Role'},
+    permission_id: {type: ObjectId, ref: 'Permission'},
+    role_id: {type: ObjectId, ref: 'Role'},
     create_time: Date,
     updated: Date
 });
