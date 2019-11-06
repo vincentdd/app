@@ -99,20 +99,6 @@ exports.sign_in = [
             return;
         } else {
             const userService = new UserService();
-            //******************************************
-            userService.findOne({username: req.body.username}).then(function (user) {
-                console.log(user.id);
-                userRole.findOne({user_id: user.id}).populate('role_id').populate('permission_id').exec(function (error, doc) {
-                    if (!error)
-                        console.log(doc);
-                    doc, role_id
-                else
-                    {
-                        console.log('faild to find user role')
-                    }
-                });
-            });
-            //******************************************
             userService.findOne({username: req.body.username})
                 .then(function (user) {
                     let obj = {username: req.body.username, password: req.body.password, privateKey: user.privateKey},
