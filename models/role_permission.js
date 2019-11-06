@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Permission = require('./permission');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 

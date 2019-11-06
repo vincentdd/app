@@ -3,7 +3,10 @@ const {sanitizeBody} = require('express-validator/filter');
 const UserService = require('../services/UserService');
 // const UserRoleService = require('../services/UserRoleservice');
 const User = require('../models/user');
-const UserRole = require('../models/user_role');
+const userRole = require('../models/user_role');
+const permission = require('../models/permission')
+const role = require('../models/role');
+const rolePer = require('../models/role_permission');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const config = require('../config');
@@ -99,10 +102,14 @@ exports.sign_in = [
             //******************************************
             userService.findOne({username: req.body.username}).then(function (user) {
                 console.log(user.id);
-                UserRole.findOne({user_id: user._id}).populate('role_id').exec(function (error, doc) {
-                    console.log(error);
+                userRole.findOne({user_id: user.id}).populate('role_id').populate('permission_id').exec(function (error, doc) {
                     if (!error)
                         console.log(doc);
+                    doc, role_id
+                else
+                    {
+                        console.log('faild to find user role')
+                    }
                 });
             });
             //******************************************
