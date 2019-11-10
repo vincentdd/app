@@ -2,11 +2,13 @@ const {body, validationResult} = require('express-validator/check');
 const {sanitizeBody} = require('express-validator/filter');
 const UserService = require('../services/UserService');
 // const UserRoleService = require('../services/UserRoleservice');
+const AuthService = require('../services/AuthService');
 const User = require('../models/user');
 const userRole = require('../models/user_role');
-const permission = require('../models/permission')
+const permission = require('../models/permission');
 const role = require('../models/role');
 const rolePer = require('../models/role_permission');
+// const Auth = require('./common');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const config = require('../config');
@@ -104,6 +106,14 @@ exports.sign_in = [
                     let obj = {username: req.body.username, password: req.body.password, privateKey: user.privateKey},
                         constant = new Constant(obj);
                     if (constant.getHash().compareUser(user)) {
+                        //**********************************
+                        // let auth = new Auth({...obj, id: user.id});
+                        // auth.getRole().getPermission();
+                        let authService = new AuthService({...obj, id: user.id});
+                        authService.getRole().then(function (temp) {
+                            console.log(temp.user.roleArr[0])
+                        });
+                        //**********************************
                         let token = jwt.sign({foo: 'bar'}, config.jwtsecret, {
                             expiresIn: '1d', // 授权时效1天
                         });
