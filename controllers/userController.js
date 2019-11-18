@@ -111,7 +111,7 @@ exports.sign_in = [
                         // auth.getRole().getPermission();
                         let authService = new AuthService({...obj, id: user.id});
                         authService.getRole().then(function (temp) {
-                            console.log(temp.user.roleArr[0])
+                            console.log(temp[0].role_id.role_name)
                         });
                         //**********************************
                         let token = jwt.sign({foo: 'bar'}, config.jwtsecret, {

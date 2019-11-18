@@ -29,45 +29,31 @@ class AuthService extends BaseService {
 
     async getRole() {
         const user = this.user;
-        let count = 0;
-        await userRole.find({user_id: user.id}).populate('role_id').exec(function (error, doc) {
-            if (!error && doc !== undefined) {
-                user.roleArr = doc.map(function (temp) {
-                    return {
-                        roleID: temp.role_id._id,
-                        roleName: temp.role_id.role_name,
-                        create_time: temp.role_id.create_time,
-                        updated: temp.role_id.updated
-                    }
-                });
-            }
-            else {
-                console.log('faild to find user role')
-            }
-        });
-        console.log(`${count}${user.roleArr.length}`);
-        count++;
-        return this;
+        let temps = await userRole.find({user_id: user.id}).populate('role_id');
+        // const result = await Promise.all(temps)
+        console.log(`in auth ${user.roleArr.length}`);
+        return temps;
     }
 
     async getPermission() {
-        let user = this.user;
-        await user.roleArr.map(function (temp) {
-            return rolePer.find({role_id: temp.roleID}).populate('permission_id').exec(function (error, doc) {
-                if (!error && doc !== undefined) {
-                    doc.forEach(function (temp) {
-                        user.perm.push({
-                            permissionID: temp.permission_id._id,
-                            create_time: temp.permission_id.create_time,
-                            updated: temp.permission_id.updated
-                        })
-                    })
-                } else {
-                    console.log('faild to find permission')
-                }
-            })
-        });
-        return this;
+
+        // let user = this.user;
+        // user.roleArr.map(await function (temp) {
+        //     return rolePer.find({role_id: temp.roleID}).populate('permission_id').exec(function (error, doc) {
+        //         if (!error && doc !== undefined) {
+        //             doc.forEach(function (temp) {
+        //                 user.perm.push({
+        //                     permissionID: temp.permission_id._id,
+        //                     create_time: temp.permission_id.create_time,
+        //                     updated: temp.permission_id.updated
+        //                 })
+        //             })
+        //         } else {
+        //             console.log('faild to find permission')
+        //         }
+        //     })
+        // });
+        // return this;
     }
 }
 
