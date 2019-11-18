@@ -13,6 +13,8 @@ class AuthService extends BaseService {
         this.user.perm = [];
         this.getRole.bind(this);
         this.getUser.bind(this);
+        this.getPremissionByUserName.bind(this);
+        this.getPreArr.bind(this);
     }
 
     async getUser() {
@@ -27,106 +29,79 @@ class AuthService extends BaseService {
         return this.user;
     }
 
-    async getRole() {
-        const user = this.user;
-        let temps = await userRole.find({user_id: user.id}).populate('role_id');
-        // const result = await Promise.all(temps)
-        console.log(`in auth ${user.roleArr.length}`);
-        return temps;
+    async fetchRoleArr() {
+        try {
+            const user = this.user;
+            return await userRole.find({user_id: user.id}).populate('role_id')
+        } catch {
+            console.log(`failed to get role array`)
+        }
     }
 
-    async getPermission() {
+    setRoleArr() {
+        this.roleArr = this.fetchRoleArr();
+    }
 
-        // let user = this.user;
-        // user.roleArr.map(await function (temp) {
-        //     return rolePer.find({role_id: temp.roleID}).populate('permission_id').exec(function (error, doc) {
-        //         if (!error && doc !== undefined) {
-        //             doc.forEach(function (temp) {
-        //                 user.perm.push({
-        //                     permissionID: temp.permission_id._id,
-        //                     create_time: temp.permission_id.create_time,
-        //                     updated: temp.permission_id.updated
-        //                 })
-        //             })
-        //         } else {
-        //             console.log('faild to find permission')
-        //         }
-        //     })
-        // });
-        // return this;
+    async getRole() {
+        try {
+            const user = this.user;
+            return await userRole.find({user_id: user.id}).populate('role_id')
+        } catch {
+            console.log(`failed to get role array`)
+        }
+    }
+
+    async getPermission(arr) {
+        let preArr = [];
+        try {
+            for (let temp of arr) {
+                const result = await rolePer.find({role_id: temp.role_id._id}).populate('permission_id');
+                preArr = preArr.concat(result);
+            }
+            return preArr;
+        } catch {
+            console.log(`failed to get Premission`)
+        }
+    }
+
+    getPreArr(arr) {
+        const result = [];
+        while (arr.length !== 0) {
+            const temp = arr.pop();
+            result.push({
+                premissionName: temp.premission_id.premission_name,
+                createTime: temp.premission_id.create_time,
+                updated: temp.premission_id.updated
+            })
+        }
+        return result;
+    }
+
+    getRoleArr() {
+        try {
+
+            console.log(this.roleArr);
+            // then(function (obj) {
+            //     // return {roleName:}
+            // });
+            const result = temp.map(function (obj) {
+                // return {roleName:}
+            })
+        } catch {
+            console.log(`failed to get Role Array by user name`)
+        }
+    }
+
+    async getPremissionByUserName() {
+        let preArr = [];
+        try {
+            const tempArr = await this.getRole();
+            preArr = await this.getPermission(tempArr);
+            return this.getPreArr(preArr);
+        } catch {
+            console.log(`failed to get Premission by role id`)
+        }
     }
 }
 
 module.exports = AuthService;
-
-// class Auth {
-//     constructor(user) {
-//         this.user = user;
-//         this.user.roleArr = [];
-//         this.user.perm = [];
-//         this.getRole.bind(this);
-//         this.getUser.bind(this);
-//     }
-//
-//     getUser() {
-//         const userService = new UserService();
-//         const user = this.user;
-//         userService.findOne({username: user.name}).then(function (err, doc) {
-//             if (!err) {
-//                 let obj = {username: doc.username, password: doc.password, privateKey: doc.privateKey};
-//                 this.user = {...user, ...obj};
-//             }
-//         });
-//         return this.user;
-//     }
-//
-//     getRole() {
-//         const user = this.user,
-//             _that = this;
-//         userRole.find({user_id: user.id}).populate('role_id').exec(function (error, doc) {
-//             if (!error && doc !== undefined) {
-//                 user.roleArr = doc.map(function (temp) {
-//                     return {
-//                         roleID: temp.role_id._id,
-//                         roleName: temp.role_id.role_name,
-//                         create_time: temp.role_id.create_time,
-//                         updated: temp.role_id.updated
-//                     }
-//                 });
-//             }
-//             else {
-//                 console.log('faild to find user role')
-//             }
-//             console.log(user);
-//             debugger;
-//             return _that;
-//         });
-//         return this;
-//     }
-//
-//     getPermission() {
-//         let user = this.user;
-//         user.roleArr.map(function (temp) {
-//             rolePer.find({role_id: temp.roleID}).then(function (err, docs) {
-//                 console.log(err);
-//                 if (!err)
-//                     console.log(doc)
-//             });
-//             rolePer.find({role_id: temp.roleID}).populate('permission_id').exec(function (error, doc) {
-//                 if (!error && doc !== undefined) {
-//                     doc.forEach(function (temp) {
-//                         user.perm.push({
-//                             permissionID: temp.permission_id._id,
-//                             create_time: temp.permission_id.create_time,
-//                             updated: temp.permission_id.updated
-//                         })
-//                     })
-//                 } else {
-//                     console.log('faild to find permission')
-//                 }
-//             })
-//         });
-//         return this;
-//     }
-// };
-
