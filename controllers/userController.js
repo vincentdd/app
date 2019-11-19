@@ -110,8 +110,8 @@ exports.sign_in = [
                         // let auth = new Auth({...obj, id: user.id});
                         // auth.getRole().getPermission();
                         let authService = new AuthService({...obj, id: user.id});
-                        // console.log(authService.getPremissionByUserName());
-                        console.log(authService.getRoleArr());
+                        console.log(authService.getPremissionByUserName());
+                        // console.log(authService.setRoleArr());
                         //**********************************
                         let token = jwt.sign({foo: 'bar'}, config.jwtsecret, {
                             expiresIn: '1d', // 授权时效1天
