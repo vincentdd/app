@@ -29,31 +29,27 @@ class AuthService extends BaseService {
         return this.user;
     }
 
-    async fetchRoleArr() {
-        try {
-            const user = this.user;
-            const roleArr = await userRole.find({user_id: user.id}).populate('role_id').exec();
-            return {
-                code: 0,
-                data: {
-                    roleArr: [...roleArr]
-                }
-            };
-        } catch {
-            console.log(`failed to get role array`)
-        }
-    }
-
-    async setRoleArr() {
-        const temp = await this.fetchRoleArr();
-        console.log(temp);
-        this.roleArr = temp;
-    }
+    // async fetchRoleArr() {
+    // }
+    //
+    // async setRoleArr() {
+    //     const temp = await this.fetchRoleArr();
+    //     console.log(temp);
+    //     this.roleArr = temp;
+    // }
+    //
+    // getRoleArr() {
+    //     try {
+    //
+    //     } catch {
+    //         console.log(`failed to get Role Array by user name`)
+    //     }
+    // }
 
     async getRole() {
         try {
             const user = this.user;
-            return await userRole.find({user_id: user.id}).populate('role_id').exec()
+            return await userRole.find({user_id: user.id}).populate('role_id')
         } catch {
             console.log(`failed to get role array`)
         }
@@ -73,29 +69,17 @@ class AuthService extends BaseService {
     }
 
     getPreArr(arr) {
-        const result = [];
+        let result = {userName: this.user.name, timestamp: Date.now()};
+        result.preArr = [];
         while (arr.length !== 0) {
             const temp = arr.pop();
-            result.push({
+            result.preArr.push({
                 premissionName: temp.premission_id.premission_name,
                 createTime: temp.premission_id.create_time,
                 updated: temp.premission_id.updated
             })
         }
         return result;
-    }
-
-    getRoleArr() {
-        try {
-            // const temp = then(function (obj) {
-            //      return {roleName:}
-            // });
-            // const result = temp.map(function (obj) {
-            //      return {roleName:}
-            // })
-        } catch {
-            console.log(`failed to get Role Array by user name`)
-        }
     }
 
     async getPremissionByUserName() {
