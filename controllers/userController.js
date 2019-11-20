@@ -113,7 +113,7 @@ exports.sign_in = [
                             res.json(responseData);
                         } else {
                             let authService = new AuthService({...obj, id: user.id});
-                            return authService.getPremissionByUserName()
+                            return authService.getPermissionByUserName()
                         }
                     }
                 ).then((authObj) => {

@@ -64,32 +64,35 @@ class AuthService extends BaseService {
             }
             return preArr;
         } catch {
-            console.log(`failed to get Premission`)
+            console.log(`failed to get Permission`)
         }
     }
 
     getPreArr(arr) {
-        let result = {userName: this.user.name, timestamp: Date.now()};
+        let result = {userName: this.user.username, timestamp: Date.now()};
         result.preArr = [];
         while (arr.length !== 0) {
             const temp = arr.pop();
             result.preArr.push({
-                premissionName: temp.premission_id.premission_name,
-                createTime: temp.premission_id.create_time,
-                updated: temp.premission_id.updated
+                permissionName: temp.permission_id.permission_name,
+                createTime: temp.permission_id.create_time,
+                updated: temp.permission_id.updated
             })
         }
         return result;
     }
 
-    async getPremissionByUserName() {
+    async getPermissionByUserName() {
         let preArr = [];
+        const tempArr = await this.getRole();
+        preArr = await this.getPermission(tempArr);
+        return this.getPreArr(preArr);
         try {
             const tempArr = await this.getRole();
             preArr = await this.getPermission(tempArr);
             return this.getPreArr(preArr);
         } catch {
-            console.log(`failed to get Premission by role id`)
+            console.log(`failed to get Permission by role id`)
         }
     }
 }
