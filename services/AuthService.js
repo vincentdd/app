@@ -32,20 +32,28 @@ class AuthService extends BaseService {
     async fetchRoleArr() {
         try {
             const user = this.user;
-            return await userRole.find({user_id: user.id}).populate('role_id')
+            const roleArr = await userRole.find({user_id: user.id}).populate('role_id').exec();
+            return {
+                code: 0,
+                data: {
+                    roleArr: [...roleArr]
+                }
+            };
         } catch {
             console.log(`failed to get role array`)
         }
     }
 
-    setRoleArr() {
-        this.roleArr = this.fetchRoleArr();
+    async setRoleArr() {
+        const temp = await this.fetchRoleArr();
+        console.log(temp);
+        this.roleArr = temp;
     }
 
     async getRole() {
         try {
             const user = this.user;
-            return await userRole.find({user_id: user.id}).populate('role_id')
+            return await userRole.find({user_id: user.id}).populate('role_id').exec()
         } catch {
             console.log(`failed to get role array`)
         }
@@ -79,14 +87,12 @@ class AuthService extends BaseService {
 
     getRoleArr() {
         try {
-
-            console.log(this.roleArr);
-            // then(function (obj) {
-            //     // return {roleName:}
+            // const temp = then(function (obj) {
+            //      return {roleName:}
             // });
-            const result = temp.map(function (obj) {
-                // return {roleName:}
-            })
+            // const result = temp.map(function (obj) {
+            //      return {roleName:}
+            // })
         } catch {
             console.log(`failed to get Role Array by user name`)
         }
