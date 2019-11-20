@@ -84,9 +84,6 @@ class AuthService extends BaseService {
 
     async getPermissionByUserName() {
         let preArr = [];
-        const tempArr = await this.getRole();
-        preArr = await this.getPermission(tempArr);
-        return this.getPreArr(preArr);
         try {
             const tempArr = await this.getRole();
             preArr = await this.getPermission(tempArr);
