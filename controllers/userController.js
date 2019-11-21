@@ -91,7 +91,7 @@ exports.sign_in = [
             const msg = errors.mapped();
             console.log(`login error:${msg.password.msg}`);
             let temp = msg.username || msg.password;
-            console.log(temp);
+            // console.log(temp);
             responseData = {
                 ...responseData,
                 code: -3,
@@ -125,7 +125,6 @@ exports.sign_in = [
                     code: 0,
                     message: MESSAGE.MES_SUCCESS,
                     token: token,
-                    id: user.id
                 };
                 res.json(responseData);
             }).catch(err => {
