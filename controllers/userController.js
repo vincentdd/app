@@ -98,49 +98,44 @@ exports.sign_in = [
                 message: temp.msg
             };
             res.json(responseData);
-            return;
         } else {
             const userService = new UserService();
             userService.findOne({username: req.body.username})
                 .then(function (user) {
-                    let obj = {username: req.body.username, password: req.body.password, privateKey: user.privateKey},
-                        constant = new Constant(obj);
-                    if (constant.getHash().compareUser(user)) {
-                        //**********************************
-                        // let auth = new Auth({...obj, id: user.id});
-                        // auth.getRole().getPermission();
-                        let authService = new AuthService({...obj, id: user.id});
-                        console.log(authService.getPremissionByUserName());
-                        // console.log(authService.setRoleArr());
-                        //**********************************
-                        let token = jwt.sign({foo: 'bar'}, config.jwtsecret, {
-                            expiresIn: '1d', // 授权时效1天
-                        });
-                        responseData = {
-                            ...responseData,
-                            code: 0,
-                            message: MESSAGE.MES_SUCCESS,
-                            token: token,
-                            id: user.id
-                        };
-                        res.json(responseData);
-                    } else {
-                        responseData = {
-                            ...responseData,
-                            code: -1,
-                            message: MESSAGE.MES_FAILED,
-                        };
-                        res.json(responseData);
+                        let obj = {username: req.body.username, password: req.body.password, privateKey: user.privateKey},
+                            constant = new Constant(obj);
+                        if (!constant.getHash().compareUser(user)) {
+                            responseData = {
+                                ...responseData,
+                                code: -1,
+                                message: MESSAGE.MES_FAILED,
+                            };
+                            res.json(responseData);
+                        } else {
+                            let authService = new AuthService({...obj, id: user.id});
+                            return authService.getPermissionByUserName()
+                        }
                     }
-                }, function (err) {
-                    responseData = {
-                        ...responseData,
-                        code: -5,
-                        message: 'Username or password is incorrect'
-                    };
-                    res.json(responseData);
+                ).then((authObj) => {
+                let token = jwt.sign(authObj, config.jwtsecret, {
+                    expiresIn: '1d', // 授权时效1天
                 });
-            return;
+                responseData = {
+                    ...responseData,
+                    code: 0,
+                    message: MESSAGE.MES_SUCCESS,
+                    token: token,
+                    id: user.id
+                };
+                res.json(responseData);
+            }).catch(err => {
+                responseData = {
+                    ...responseData,
+                    code: 0,
+                    MSG: err
+                };
+                res.json(responseData);
+            });
         }
     }
 ];

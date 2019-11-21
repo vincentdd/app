@@ -18,7 +18,7 @@ class Constant {
             hmac = crypto.createHmac('sha256', privateKey);
 
         this.user.password = hmac.update(password).digest('hex');
-        console.log(`the input username${this.user.username},password${this.user.password}`);
+        // console.log(`the input username${this.user.username},password${this.user.password}`);
         return this;
     }
 
