@@ -68,7 +68,7 @@ exports.find_all = (req, res, next) => {
     console.log(req.user);
     billService.findAll({})
         .then(function (_resule) {
-            console.log(_resule.length);
+            console.log(req.user);
             res.json({code: CODE.CODE_SUCCESS, payload: _resule, msg: MESSAGE.MES_SUCCESS});
         }, function (err) {
             res.json({code: CODE.CODE_FAILED, payload: null, msg: MESSAGE.MES_NOT_FOUND});

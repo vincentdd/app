@@ -13,7 +13,7 @@ class AuthService extends BaseService {
         this.user.perm = [];
         this.getRole.bind(this);
         this.getUser.bind(this);
-        this.getPremissionByUserName.bind(this);
+        this.getPermissionByUserName.bind(this);
         this.getPreArr.bind(this);
     }
 
@@ -69,7 +69,8 @@ class AuthService extends BaseService {
     }
 
     getPreArr(arr) {
-        let result = {userName: this.user.username, timestamp: Date.now()};
+        let user = this.user,
+            result = {userName: user.username, timestamp: Date.now(),id:user.id};
         result.preArr = [];
         while (arr.length !== 0) {
             const temp = arr.pop();
