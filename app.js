@@ -154,7 +154,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use(jwtAuth);
+app.use(jwtAuth);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

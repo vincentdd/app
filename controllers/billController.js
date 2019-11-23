@@ -65,6 +65,7 @@ exports.add_bill_list = [
 
 exports.find_all = (req, res, next) => {
     const billService = new BillService();
+    console.log(req.user);
     billService.findAll({})
         .then(function (_resule) {
             console.log(_resule.length);
