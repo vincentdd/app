@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const ObjectId = Schema.ObjectId;
+const ObjectId = mongoose.Types.ObjectId;
+
 
 const TagSchema = new Schema({
     context: {type: String, required: true},

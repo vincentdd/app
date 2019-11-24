@@ -3,7 +3,7 @@ const router = express.Router();
 const bill_controller = require('../controllers/billController');
 
 //bill
-router.get('/', bill_controller.find_all);
+router.get('/', bill_controller.findAll);
 router.post('/', bill_controller.add_bill);
 router.post('/lists', bill_controller.add_bill_list);
 

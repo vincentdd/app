@@ -1,35 +1,37 @@
-// const TagDao = require('../dao/TagDao');
-// let tagDao = new TagDao();
 const BaseService = require('./BaseService');
 let Tag = require('../models/tag');
+const {MESSAGE, CODE} = require('../utils/response');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
-class TagService extends BaseService{
+class TagService extends BaseService {
     constructor() {
         super(Tag);
     }
-    //如果有啥特殊需求的话，自己再重写方法咯
+
+    async personalQuery(userID) {
+        try {
+            const tagModel = this.Model;
+            const result = await tagModel.find({userId: ObjectId(userID)});
+            console.log(result);
+            return result;
+        } catch (error) {
+            console.log('get tags error--> ', error);
+            throw new UserException({code: CODE.CODE_FAILED, message: MESSAGE.MES_FAILED});
+        }
+    }
+
+    async commonQuery() {
+        try {
+            const tagModel = this.Model;
+            const result = await tagModel.find().where('userId').exists(false);
+            console.log(result);
+            return result;
+        } catch (error) {
+            console.log('get tags error--> ', error);
+            throw new UserException({code: CODE.CODE_FAILED, message: MESSAGE.MES_FAILED});
+        }
+    }
 }
 
 module.exports = TagService;
-// class TagService {
-//     async getTagList() {
-//         try {
-//             // 调用 dao 层查询数据
-//             let tagList = await tagDao.findAll();
-//             return tagList;
-//         } catch (err) {
-//             console.log(`getTagList error--> ${error}`);
-//             return error;
-//         }
-//     }
-//     async register (obj) {
-//         try {
-//             let rescode = await tagDao.save(obj);
-//             return rescode;
-//         } catch (err) {
-//             console.log(`register error--> ${error}`);
-//             return error;
-//         }
-//     }
-// }
-// module.exports = TagService;

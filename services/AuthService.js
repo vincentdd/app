@@ -4,6 +4,7 @@ const permission = require('../models/permission');
 const role = require('../models/role');
 const rolePer = require('../models/role_permission');
 const BaseService = require('./BaseService');
+const _ = require('lodash');
 
 class AuthService extends BaseService {
     constructor(user) {
@@ -68,9 +69,15 @@ class AuthService extends BaseService {
         }
     }
 
+    static authentication( permissionArr, targetArr) {
+        let result = _.intersectionBy(targetArr, permissionArr, 'permissionName');
+        console.log(result);
+        return result.length === targetArr.length;
+    }
+
     getPreArr(arr) {
         let user = this.user,
-            result = {userName: user.username, timestamp: Date.now(),id:user.id};
+            result = {userName: user.username, timestamp: Date.now(), userID: user.id};
         result.preArr = [];
         while (arr.length !== 0) {
             const temp = arr.pop();

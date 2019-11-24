@@ -3,7 +3,7 @@ const router = express.Router();
 const bill_controller = require('../controllers/billController');
 
 router.route('/:id')
-    .get(bill_controller.find_by_id)
+    .get(bill_controller.findByID)
     .put(bill_controller.bill_update);
 
 // router.post('', tag_controller.find_one);

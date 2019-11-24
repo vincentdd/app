@@ -1,6 +1,8 @@
 function UserException(obj) {
-    this.message = obj.message;
-    this.code = obj.code;
+    const result = Object.assign({});
+    result.message = obj.message;
+    result.code = obj.code;
+    return result;
 }
 
 module.exports = UserException;

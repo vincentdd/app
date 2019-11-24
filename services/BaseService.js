@@ -1,5 +1,5 @@
 const UserException = require('../utils/exception');
-const { CODE_FAILED, MES_FAILED } = require('../utils/response');
+const {MESSAGE, CODE} = require('../utils/response');
 
 class BaseService {
     /**
@@ -44,7 +44,7 @@ class BaseService {
             return result;
         } catch (error) {
             console.log('save error--> ', error);
-            throw new UserException({code: CODE_FAILED, message: MES_FAILED});
+            throw new UserException({code: CODE.CODE_FAILED, message: MESSAGE.MES_FAILED});
         }
     }
 
@@ -63,7 +63,7 @@ class BaseService {
             return result;
         } catch (error) {
             console.log('save error--> ', error);
-            throw new UserException({code: CODE_FAILED, message: MES_FAILED});
+            throw new UserException({code: CODE.CODE_FAILED, message: MESSAGE.MES_FAILED});
         }
     }
 
@@ -76,16 +76,14 @@ class BaseService {
      */
     async findAll(condition, constraints) {
         try {
-            console.log(`this is condition of find all ${condition.toString()}`);
-            // console.log(this.Model);
+            // console.log(`this is condition of find all ${condition.toString()}`);
             let data = await this.Model.find(condition, constraints ? constraints : null).orFail(() => Error('not found'));
-            // let data = await this.Model.find();
             console.log('findAll success--> ', data);
             return data;
         } catch (error) {
             console.log('findAll error--> ', error);
             // return error;
-            throw new UserException({code: CODE_FAILED, message: MES_FAILED});
+            throw new UserException({code: CODE.CODE_FAILED, message: MESSAGE.MES_FAILED});
         }
     }
 
@@ -130,6 +128,7 @@ class BaseService {
             return error;
         }
     }
+
     /**
      * 查找排序之后的第一条
      *

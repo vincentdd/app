@@ -63,19 +63,17 @@ exports.add_bill_list = [
     }
 ];
 
-exports.find_all = (req, res, next) => {
+exports.findAll = (req, res, next) => {
     const billService = new BillService();
-    console.log(req.user);
     billService.findAll({})
         .then(function (_resule) {
-            console.log(req.user);
             res.json({code: CODE.CODE_SUCCESS, payload: _resule, msg: MESSAGE.MES_SUCCESS});
         }, function (err) {
             res.json({code: CODE.CODE_FAILED, payload: null, msg: MESSAGE.MES_NOT_FOUND});
         });
 };
 
-exports.find_by_id = (req, res, next) => {
+exports.findByID = (req, res, next) => {
     const billService = new BillService();
     console.log(`find by id: ${req.params.id}S`);
     billService.findById(req.params.id).then(function (bill) {
