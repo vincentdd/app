@@ -21,12 +21,12 @@ class BaseService {
     async create(obj) {
         let entity = new this.Model(obj);
         try {
-            let dao = await this.Model.create(entity);
+            let result = await this.Model.create(entity);
             console.log('create result--> ', dao);
-            return dao;
+            return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: result};
         } catch (error) {
             console.log('create error--> ', error);
-            return error;
+            return {code: CODE.CODE_FAILED, message: error};
         }
     }
 
@@ -41,7 +41,7 @@ class BaseService {
         let entity = new this.Model(obj);
         try {
             let result = await entity.save();
-            return result;
+            return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: result};
         } catch (error) {
             console.log('save error--> ', error);
             throw new UserException({code: CODE.CODE_FAILED, message: MESSAGE.MES_FAILED});
@@ -60,7 +60,7 @@ class BaseService {
             console.log(entity.findOne === undefined);
             console.log(entity.insertMany === undefined);
             let result = await entity.insertMany(arr);
-            return result;
+            return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: result};
         } catch (error) {
             console.log('save error--> ', error);
             throw new UserException({code: CODE.CODE_FAILED, message: MESSAGE.MES_FAILED});
@@ -79,11 +79,11 @@ class BaseService {
             // console.log(`this is condition of find all ${condition.toString()}`);
             let data = await this.Model.find(condition, constraints ? constraints : null).orFail(() => Error('not found'));
             console.log('findAll success--> ', data);
-            return data;
+            return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: data};
         } catch (error) {
             console.log('findAll error--> ', error);
             // return error;
-            throw new UserException({code: CODE.CODE_FAILED, message: MESSAGE.MES_FAILED});
+            return {code: CODE.CODE_FAILED, message: error};
         }
     }
 
@@ -96,19 +96,16 @@ class BaseService {
      * @returns {Promise}
      */
     async findOne(condition, constraints) {
-        // console.log(this.Model.findOne(condition).orFail);
-        // new Error('User not found')
-        // try {
-        //     let data = await this.Model.findOne(condition, constraints ? constraints : null).orFail(() => Error('Not found'));
-        //     console.log('findOne success--> ', condition, data);
-        //     return data;
-        // } catch (error) {
-        //     console.log(`findOne error--> ${error}`);
-        //     return error;
-        // }
-        let data = await this.Model.findOne(condition, constraints ? constraints : null).orFail(() => Error('Not found'));
-        console.log(`findOne success--> ${data}`);
-        return data;
+        console.log(this.Model.findOne(condition).orFail);
+        new Error('User not found')
+        try {
+            let data = await this.Model.findOne(condition, constraints ? constraints : null).orFail(() => Error('Not found'));
+            console.log('findOne success--> ', condition, data);
+            return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: data};
+        } catch (error) {
+            console.log(`findOne error--> ${error}`);
+            return {code: CODE.CODE_FAILED, message: error};
+        }
     }
 
     /**
@@ -122,10 +119,10 @@ class BaseService {
         try {
             let data = await this.Model.findById(condition, constraints ? constraints : null).orFail(() => Error('Not found'));
             console.log('findById success--> ', condition);
-            return data;
+            return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: data};
         } catch (error) {
             console.log(`findById error--> ${error}`);
-            return error;
+            return {code: CODE.CODE_FAILED, message: error};
         }
     }
 
@@ -142,10 +139,10 @@ class BaseService {
             let data = await this.Model.findOne(condition)
                 .sort({[orderColumn]: orderType})
                 .exec();
-            return data;
+            return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: data};
         } catch (error) {
             console.log(`findOneByOrder--> ${error}`);
-            return error;
+            return {code: CODE.CODE_FAILED, message: error};
         }
     }
 
@@ -163,10 +160,10 @@ class BaseService {
             let result = await this.Model.updateOne(condition, updater, {multi: false});
             console.log(result.n);
             console.log(result.nModified);
-            return true;
+            return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: result};
         } catch (error) {
             console.log(`update error--> ${error}`);
-            return false;
+            return {code: CODE.CODE_FAILED, message: error};
         }
     }
 
@@ -180,10 +177,10 @@ class BaseService {
     async remove(condition) {
         try {
             let result = await this.Model.remove(condition);
-            return result;
+            return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: result};
         } catch (error) {
             console.log(`remove error--> ${error}`);
-            return error;
+            return {code: CODE.CODE_FAILED, message: error};
         }
     }
 }

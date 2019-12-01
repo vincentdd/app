@@ -12,21 +12,29 @@ exports.createTag = [
     sanitizeBody('userId').trim().escape(),
     (req, res, next) => {
         const errors = validationResult(req);
+        const addall = req.query.addall;
+        const permissionArr = req.user.preArr;
+        let tag = (AuthService.queryPermission([{permissionName: 'createTagForAll'}], permissionArr)) && addall === 'all'
+            ? {context: req.body.context, userId: req.body.userId}
+            : {context: req.body.context};
         if (!errors.isEmpty()) {
             res.json({errors: errors.mapped()});
-            return;
         } else {
             const tagService = new TagService();
-            tagService.findOne({'context': req.body.context})
+            tagService.findAll(tag)
                 .then(function (_context) {
                     console.log(_context);
                     res.send({code: CODE.CODE_FAILED, msg: 'tag is already exists', payload: _context});
                 }, function (err) {
-                    const tag = new Tag({
-                        context: req.body.context,
-                        userId: req.body.userId
-                    });
-                    tagService.save(tag).then(function (result) {
+                    // const tag = new Tag({
+                    //     context: req.body.context,
+                    //     userId: req.body.userId
+                    // });
+                    // const permissionArr = req.user.preArr;
+                    // let tag = (AuthService.queryPermission([{permissionName: 'createTagForAll'}], permissionArr)) && addall === 'all'
+                    //     ? new Tag({context: req.body.context, userId: req.body.userId, create_time: Date.now(), updated: Date.now()})
+                    //     : new Tag({context: req.body.context});
+                    tagService.create(tag).then(function (result) {
                         res.send({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS, payload: tag});
                     }, function (result) {
                         res.send({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED, payload: result});
@@ -42,26 +50,17 @@ exports.findAll = (req, res, next) => {
     let user = req.user,
         permissionArr = user.preArr,
         condition;
-    (AuthService.authentication(['queryAllTag'], permissionArr).length === 1)&&flag ==='all'
-        ? condition = {} :
-        condition = {userId: user.userID};
-    tagService.personalQuery(user.userID);
-    tagService.findAll(condition)
-        .then(function (_resule) {
-            if (_resule.length !== 0) {
-                console.log(_resule);
-                res.send({code: CODE.CODE_SUCCESS, payload: [..._resule], msg: MESSAGE.MES_SUCCESS});
-            } else {
-                res.send({code: CODE.CODE_FAILED, payload: [], msg: MESSAGE.MES_NOT_FOUND});
-            }
-        }).catch(function (_resule) {
-        res.send(_resule);
+    condition = (AuthService.queryPermission([{permissionName: 'queryAllTag'}], permissionArr)) && flag === 'all'
+        ? [flag, user.userID] :
+        ['undefined', user.userID];
+    tagService.tagQuery(...condition).then(function (_result) {
+        res.json(_result);
     });
 };
 
-exports.findAllByUser = () => {
-    
-};
+// exports.findAllByUser = () => {
+//
+// };
 
 exports.findByID = (req, res, next) => {
     const tagService = new TagService();

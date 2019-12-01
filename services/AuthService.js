@@ -69,8 +69,8 @@ class AuthService extends BaseService {
         }
     }
 
-    static authentication( permissionArr, targetArr) {
-        let result = _.intersectionBy(targetArr, permissionArr, 'permissionName');
+    static queryPermission(targetArr, permissionArr) {
+        let result = _.intersectionBy(permissionArr, targetArr, 'permissionName');
         console.log(result);
         return result.length === targetArr.length;
     }
