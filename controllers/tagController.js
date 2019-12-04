@@ -7,39 +7,41 @@ const AuthService = require('../services/AuthService');
 
 exports.createTag = [
     body('context').isLength({min: 1}).trim().withMessage('tag name must be specified.'),
-    body('userId').isLength({min: 1}).trim().withMessage('userId must be specified.'),
     sanitizeBody('context').trim().escape(),
-    sanitizeBody('userId').trim().escape(),
     (req, res, next) => {
         const errors = validationResult(req);
-        const addall = req.query.addall;
-        const permissionArr = req.user.preArr;
-        let tag = (AuthService.queryPermission([{permissionName: 'createTagForAll'}], permissionArr)) && addall === 'all'
-            ? {context: req.body.context, userId: req.body.userId}
-            : {context: req.body.context};
         if (!errors.isEmpty()) {
             res.json({errors: errors.mapped()});
         } else {
-            const tagService = new TagService();
-            tagService.findAll(tag)
-                .then(function (_context) {
-                    console.log(_context);
-                    res.send({code: CODE.CODE_FAILED, msg: 'tag is already exists', payload: _context});
-                }, function (err) {
-                    // const tag = new Tag({
-                    //     context: req.body.context,
-                    //     userId: req.body.userId
-                    // });
-                    // const permissionArr = req.user.preArr;
-                    // let tag = (AuthService.queryPermission([{permissionName: 'createTagForAll'}], permissionArr)) && addall === 'all'
-                    //     ? new Tag({context: req.body.context, userId: req.body.userId, create_time: Date.now(), updated: Date.now()})
-                    //     : new Tag({context: req.body.context});
-                    tagService.create(tag).then(function (result) {
-                        res.send({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS, payload: tag});
-                    }, function (result) {
-                        res.send({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED, payload: result});
-                    });
-                });
+            const flag = req.query.flag, permissionArr = req.user.preArr, tagService = new TagService();
+            const isCreateTagForAll = AuthService.queryPermission([{permissionName: 'createTagForAll'}], permissionArr);
+            let tag = (isCreateTagForAll && flag === 'all')
+                ? {context: req.body.context}
+                : {context: req.body.context, userId: req.user.userID};
+            tagService.addTag(isCreateTagForAll,tag).then(function (doc) {
+                res.json(doc);
+            }).catch(function (e) {
+                res.json(e);
+            })
+            // tagService.findAll(tag)
+            //     .then(function (_context) {
+            //         console.log(_context);
+            //         res.send({code: CODE.CODE_FAILED, msg: 'tag is already exists', payload: _context});
+            //     }).catch(function (err) {
+            //     // const tag = new Tag({
+            //     //     context: req.body.context,
+            //     //     userId: req.body.userId
+            //     // });
+            //     // const permissionArr = req.user.preArr;
+            //     // let tag = (AuthService.queryPermission([{permissionName: 'createTagForAll'}], permissionArr)) && addall === 'all'
+            //     //     ? new Tag({context: req.body.context, userId: req.body.userId, create_time: Date.now(), updated: Date.now()})
+            //     //     : new Tag({context: req.body.context});
+            //     tagService.create(tag).then(function (result) {
+            //         res.send({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS, payload: tag});
+            //     }, function (result) {
+            //         res.send({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED, payload: result});
+            //     });
+            // });
         }
     }
 ];

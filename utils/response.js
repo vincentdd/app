@@ -3,7 +3,7 @@ exports.MESSAGE = {
     MES_SUCCESS: 'success',
     MES_SPECIFIED:'must be specified',
     MES_TAKEN:'is already taken',
-    MES_EXISTS:'is already exists',
+    MES_EXISTS:'has already exists',
     MES_FAILED: 'failed'
 };
 

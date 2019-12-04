@@ -32,9 +32,25 @@ class TagService extends BaseService {
         }
     }
 
-    async addTag(){
-
+    async addTag(flag, tag) {
+        try {
+            const tagModel = this.Model;
+            let temp = await tagModel.find(tag).where('userId').exists(!flag);
+            if (temp.length !== 0) {
+                return ({code: CODE.CODE_FAILED, message: `Tag ${MESSAGE.MES_EXISTS}`});
+            } else {
+                this.create(tag).then(function (result) {
+                        return ({code: CODE.CODE_FAILED, message: `Tag ${MESSAGE.MES_EXISTS}`, payload: result});
+                    }
+                ).catch(function (e) {
+                    return ({code: CODE.CODE_FAILED, message: e});
+                })
+            }
+        } catch (e) {
+            return ({code: CODE.CODE_FAILED, message: e});
+        }
     }
+
     // async commonQuery() {
     //     try {
     //         const tagModel = this.Model;

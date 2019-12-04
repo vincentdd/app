@@ -36,7 +36,6 @@ exports.sign_up = [
                 message: temp.msg
             };
             res.json(responseData);
-            return;
         } else {
             const userService = new UserService();
             userService.findOne({username: req.body.username})
@@ -49,7 +48,6 @@ exports.sign_up = [
                     };
                     res.json(responseData);
                     // res.send('' + _user.length);
-                    return;
                 }, function (err) {
                     let user = {username: req.body.username, password: req.body.password},
                         constant = new Constant(user),
@@ -101,19 +99,26 @@ exports.sign_in = [
         } else {
             const userService = new UserService();
             userService.findOne({username: req.body.username})
-                .then(function (user) {
-                        let obj = {username: req.body.username, password: req.body.password, privateKey: user.privateKey},
-                            constant = new Constant(obj);
-                        if (!constant.getHash().compareUser(user)) {
-                            responseData = {
-                                ...responseData,
-                                code: -1,
-                                message: MESSAGE.MES_FAILED,
-                            };
-                            res.json(responseData);
-                        } else {
-                            let authService = new AuthService({...obj, id: user.id});
-                            return authService.getPermissionByUserName()
+                .then(function (temp) {
+                        if (temp.code === 0) {
+                            const user = temp.payload;
+                            let obj = {
+                                    username: req.body.username,
+                                    password: req.body.password,
+                                    privateKey: user.privateKey
+                                },
+                                constant = new Constant(obj);
+                            if (!constant.getHash().compareUser(user)) {
+                                responseData = {
+                                    ...responseData,
+                                    code: -1,
+                                    message: MESSAGE.MES_FAILED,
+                                };
+                                res.json(responseData);
+                            } else {
+                                let authService = new AuthService({...obj, id: user.id});
+                                return authService.getPermissionByUserName()
+                            }
                         }
                     }
                 ).then((authObj) => {

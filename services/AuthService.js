@@ -56,7 +56,7 @@ class AuthService extends BaseService {
         }
     }
 
-    async getPermission(arr) {
+    static async getPermission(arr) {
         let preArr = [];
         try {
             for (let temp of arr) {
@@ -84,7 +84,8 @@ class AuthService extends BaseService {
             result.preArr.push({
                 permissionName: temp.permission_id.permission_name,
                 createTime: temp.permission_id.create_time,
-                updated: temp.permission_id.updated
+                updated: temp.permission_id.updated,
+                userID: user.id
             })
         }
         return result;
@@ -94,7 +95,7 @@ class AuthService extends BaseService {
         let preArr = [];
         try {
             const tempArr = await this.getRole();
-            preArr = await this.getPermission(tempArr);
+            preArr = await AuthService.getPermission(tempArr);
             return this.getPreArr(preArr);
         } catch {
             console.log(`failed to get Permission by role id`)
