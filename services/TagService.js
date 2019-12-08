@@ -8,6 +8,9 @@ const ObjectId = mongoose.Types.ObjectId;
 class TagService extends BaseService {
     constructor() {
         super(Tag);
+        this.tagQuery.bind(this);
+        this.addTag.bind(this);
+        this.updateTag.bind(this);
     }
 
     async tagQuery(flag, userID) {
@@ -15,12 +18,8 @@ class TagService extends BaseService {
             let result = [];
             const tagModel = this.Model;
             if (flag !== 'all') {
-                result = await this.findAll({userId: ObjectId("5c3b35d51b93401298e7e9a7")});
-                let temp = await tagModel.find().where('userId').exists(false);
-                result = (result.code === 0)
-                    ? [...result, ...temp]
-                    : [...temp];
-                console.log(temp);
+                result = await this.findAll({$or: [{userId: ObjectId(userID)}, {userId: {$exists: false}}]});
+                console.log(result);
             } else {
                 result = await this.findAll()
             }
@@ -32,36 +31,39 @@ class TagService extends BaseService {
         }
     }
 
-    async addTag(flag, tag) {
+    async addTag(isCreateTagForAll, tag) {//isCreateTagForAll: true or false 是否添加全局分类；tag:分类对象。
         try {
             const tagModel = this.Model;
-            let temp = await tagModel.find(tag).where('userId').exists(!flag);
+            let temp = await tagModel.find({
+                context: tag.context,
+                userId: isCreateTagForAll ? {$exists: false} : {$eq: tag.userId}
+            });
             if (temp.length !== 0) {
                 return ({code: CODE.CODE_FAILED, message: `Tag ${MESSAGE.MES_EXISTS}`});
             } else {
-                this.create(tag).then(function (result) {
-                        return ({code: CODE.CODE_FAILED, message: `Tag ${MESSAGE.MES_EXISTS}`, payload: result});
-                    }
-                ).catch(function (e) {
-                    return ({code: CODE.CODE_FAILED, message: e});
-                })
+                return await this.create(tag);
             }
         } catch (e) {
-            return ({code: CODE.CODE_FAILED, message: e});
+            return ({code: CODE.CODE_FAILED, message: e.message});
         }
     }
 
-    // async commonQuery() {
-    //     try {
-    //         const tagModel = this.Model;
-    //         const result = await tagModel.find().where('userId').exists(false);
-    //         console.log(result);
-    //         return result;
-    //     } catch (error) {
-    //         console.log('get tags error--> ', error);
-    //         throw new UserException({code: CODE.CODE_FAILED, message: MESSAGE.MES_FAILED});
-    //     }
-    // }
+    async updateTag(tagId, context, userId, isAbleEditAll) {
+        try {
+            const tagModel = this.Model;
+            let existsCheck = await tagModel.find({
+                context: context,
+                $or: [{userId: ObjectId(userId)}, {userId: {$exists: false}}]
+            });
+            console.log(existsCheck);
+            if (existsCheck.length !== 0)
+                console.log('111111111111111111111111');
+            let userIdOfTag = existsCheck.length === 0 ? existsCheck.payload.userId : undefined;
+            // return ({code: result.length === 0 ? CODE.CODE_FAILED : CODE.CODE_SUCCESS, payload: result});
+        } catch (e) {
+            return ({code: CODE.CODE_FAILED, message: e.message});
+        }
+    }
 }
 
 module.exports = TagService;

@@ -4,7 +4,8 @@ exports.MESSAGE = {
     MES_SPECIFIED:'must be specified',
     MES_TAKEN:'is already taken',
     MES_EXISTS:'has already exists',
-    MES_FAILED: 'failed'
+    MES_FAILED: 'failed',
+    MES_UNKNOWN:'unknown'
 };
 
 exports.CODE = {

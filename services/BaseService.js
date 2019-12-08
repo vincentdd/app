@@ -22,7 +22,7 @@ class BaseService {
         let entity = new this.Model(obj);
         try {
             let result = await this.Model.create(entity);
-            console.log('create result--> ', dao);
+            console.log('create result--> ', obj);
             return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: result};
         } catch (error) {
             console.log('create error--> ', error);
@@ -112,12 +112,11 @@ class BaseService {
      * 根据_id查找
      *
      * @param condition _id
-     * @param constraints 查找配置
      * @returns {Promise}
      */
-    async findById(condition, constraints) {
+    async findById(condition) {
         try {
-            let data = await this.Model.findById(condition, constraints ? constraints : null).orFail(() => Error('Not found'));
+            let data = await this.Model.findById(condition).orFail(() => Error('Not found'));
             console.log('findById success--> ', condition);
             return {code: CODE.CODE_SUCCESS, message: MESSAGE.MES_SUCCESS, payload: data};
         } catch (error) {
