@@ -52,14 +52,19 @@ class TagService extends BaseService {
         try {
             const tagModel = this.Model;
             let existsCheck = await tagModel.find({
-                context: context,
-                $or: [{userId: ObjectId(userId)}, {userId: {$exists: false}}]
+                    context: context,
+                    $or: [{userId: ObjectId(userId)}, {userId: {$exists: false}}]
+                }),
+                targetCheck = await tagModel.find({_id: tagId, userId: userId});
+            const temp = await Promise.all([existsCheck, targetCheck]).then((arr) => {
+
             });
-            console.log(existsCheck);
             if (existsCheck.length !== 0)
-                console.log('111111111111111111111111');
-            let userIdOfTag = existsCheck.length === 0 ? existsCheck.payload.userId : undefined;
-            // return ({code: result.length === 0 ? CODE.CODE_FAILED : CODE.CODE_SUCCESS, payload: result});
+                return new UserException(MESSAGE.MES_EXISTS);
+            else {
+                let userIdOfTag = existsCheck.length === 0 ? existsCheck.payload.userId : undefined;
+                // return ({code: result.length === 0 ? CODE.CODE_FAILED : CODE.CODE_SUCCESS, payload: result});
+            }
         } catch (e) {
             return ({code: CODE.CODE_FAILED, message: e.message});
         }

@@ -66,17 +66,21 @@ exports.tagUpdate = [
             res.json({errors: errors.mapped()});
         }
         let target = tagService.updateTag(tagId, context, userId, isAbleEditAll);
-
-        if (target.code === 0 && userId === userIdOfTag || isAbleEditAll) {
-            tagService.update(conditions, tag).then(function (temp) {
-                console.log('更新成功：' + temp);
-                res.json({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS});
-            }, function (err) {
-                console.log('更新失败：' + err);
-                res.json({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED});
-            })
-        } else
-            res.json({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED})
+        target.then(function (result) {
+            console.log(result);
+        }).catch(function (msg) {
+            res.json({code: CODE.CODE_FAILED, msg: msg});
+        });
+        // if (target.code === 0 && userId === userIdOfTag || isAbleEditAll) {
+        //     tagService.update(conditions, tag).then(function (temp) {
+        //         console.log('更新成功：' + temp);
+        //         res.json({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS});
+        //     }, function (err) {
+        //         console.log('更新失败：' + err);
+        //         res.json({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED});
+        //     })
+        // } else
+        //     res.json({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED})
     }
 ];
 
