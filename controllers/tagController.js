@@ -57,18 +57,24 @@ exports.tagUpdate = [
     sanitizeBody('context').trim().escape(),
     (req, res, next) => {
         const errors = validationResult(req),
+            user = req.user,
+            permissionArr = user.preArr,
             tagService = new TagService(),
             tagId = req.params.id,
             context = req.body.context,
             userId = req.user.userID,
-            isAbleEditAll = AuthService.queryPermission([{permissionName: 'editAllTag'}]);
+            isAbleEditAll = AuthService.queryPermission([{permissionName: 'editAllTag'}], permissionArr);
         if (!errors.isEmpty() || tagId === undefined) {
             res.json({errors: errors.mapped()});
         }
         let target = tagService.updateTag(tagId, context, userId, isAbleEditAll);
         target.then(function (result) {
-            console.log(result);
+            if (result.code !== -1)
+                res.json({code: CODE.CODE_SUCCESS, msg: result.message, payload: result.payload});
+            else
+                throw result.message;
         }).catch(function (msg) {
+            console.log('log');
             res.json({code: CODE.CODE_FAILED, msg: msg});
         });
         // if (target.code === 0 && userId === userIdOfTag || isAbleEditAll) {

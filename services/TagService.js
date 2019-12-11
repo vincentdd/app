@@ -51,24 +51,29 @@ class TagService extends BaseService {
     async updateTag(tagId, context, userId, isAbleEditAll) {
         try {
             const tagModel = this.Model;
-            let existsCheck = await tagModel.find({
+            let existsCheck = tagModel.find({
                     context: context,
                     $or: [{userId: ObjectId(userId)}, {userId: {$exists: false}}]
                 }),
-                targetCheck = await tagModel.find({_id: tagId, userId: userId});
-            const temp = await Promise.all([existsCheck, targetCheck]).then((arr) => {
-
-            });
-            if (existsCheck.length !== 0)
-                return new UserException(MESSAGE.MES_EXISTS);
-            else {
-                let userIdOfTag = existsCheck.length === 0 ? existsCheck.payload.userId : undefined;
+                targetCheck = tagModel.find({_id: tagId, userId: userId});
+            const test = await tagModel.find({_id: tagId, userId: userId});
+            console.log(`tagId: ${tagId}--->${test}`);
+            const [resultOfExistsCheck, resultOfTargetCheck] = await Promise.all([existsCheck, targetCheck]);
+            if (resultOfExistsCheck.length !== 0) {
+                throw `Tag ${MESSAGE.MES_EXISTS}`;
+            } else if (resultOfTargetCheck.length !== 0 && userId === resultOfTargetCheck.userId || isAbleEditAll) {
+                return await this.update({_id: tagId}, {context: context});
+            } else {
+                throw `Tag ${MESSAGE.MES_FAILED}`;
+                // if (resultOfExistsCheck.length !== 0 && resultOfTargetCheck !== 0) {}
+                // let userIdOfTag = existsCheck.length === 0 ? existsCheck.payload.userId : undefined;
                 // return ({code: result.length === 0 ? CODE.CODE_FAILED : CODE.CODE_SUCCESS, payload: result});
             }
         } catch (e) {
-            return ({code: CODE.CODE_FAILED, message: e.message});
+            return ({code: CODE.CODE_FAILED, message: e});
         }
     }
 }
 
-module.exports = TagService;
+module
+    .exports = TagService;
