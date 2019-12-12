@@ -67,7 +67,7 @@ exports.tagUpdate = [
         if (!errors.isEmpty() || tagId === undefined) {
             res.json({errors: errors.mapped()});
         }
-        let target = tagService.updateTag(tagId, context, userId, isAbleEditAll);
+        let target = tagService.updateTag({_id: tagId, context: context, userId: userId}, isAbleEditAll);
         target.then(function (result) {
             if (result.code !== -1)
                 res.json({code: CODE.CODE_SUCCESS, msg: result.message, payload: result.payload});
@@ -77,19 +77,32 @@ exports.tagUpdate = [
             console.log('log');
             res.json({code: CODE.CODE_FAILED, msg: msg});
         });
-        // if (target.code === 0 && userId === userIdOfTag || isAbleEditAll) {
-        //     tagService.update(conditions, tag).then(function (temp) {
-        //         console.log('更新成功：' + temp);
-        //         res.json({code: CODE.CODE_SUCCESS, msg: MESSAGE.MES_SUCCESS});
-        //     }, function (err) {
-        //         console.log('更新失败：' + err);
-        //         res.json({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED});
-        //     })
-        // } else
-        //     res.json({code: CODE.CODE_FAILED, msg: MESSAGE.MES_FAILED})
     }
 ];
 
+exports.deleteTag = (req, res, next) => {
+    const errors = validationResult(req),
+        user = req.user,
+        permissionArr = user.preArr,
+        tagService = new TagService(),
+        tagId = req.params.id,
+        context = req.body.context,
+        userId = req.user.userID,
+        isAbleEditAll = AuthService.queryPermission([{permissionName: 'editAllTag'}], permissionArr);
+    if (!errors.isEmpty() || tagId === undefined) {
+        res.json({errors: errors.mapped()});
+    }
+    let target = tagService.updateTag({_id: tagId, context: context, userId: userId, status: 0}, isAbleEditAll);
+    target.then(function (result) {
+        if (result.code !== -1)
+            res.json({code: CODE.CODE_SUCCESS, msg: result.message, payload: result.payload});
+        else
+            throw result.message;
+    }).catch(function (msg) {
+        console.log('log');
+        res.json({code: CODE.CODE_FAILED, msg: msg});
+    });
+};
 
 exports.find_one = [
     // body('payload').isLength({ min: 1 }).trim().withMessage('tag name must be specified.'),

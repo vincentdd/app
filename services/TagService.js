@@ -18,7 +18,12 @@ class TagService extends BaseService {
             let result = [];
             const tagModel = this.Model;
             if (flag !== 'all') {
-                result = await this.findAll({$or: [{userId: ObjectId(userID)}, {userId: {$exists: false}}]});
+                result = await this.findAll({
+                    $or: [{userId: ObjectId(userID), status: 1}, {
+                        userId: {$exists: false},
+                        status: 1
+                    }]
+                });
                 console.log(result);
             } else {
                 result = await this.findAll()
@@ -36,7 +41,8 @@ class TagService extends BaseService {
             const tagModel = this.Model;
             let temp = await tagModel.find({
                 context: tag.context,
-                userId: isCreateTagForAll ? {$exists: false} : {$eq: tag.userId}
+                userId: isCreateTagForAll ? {$exists: false} : {$eq: tag.userId},
+                status: 1
             });
             if (temp.length !== 0) {
                 return ({code: CODE.CODE_FAILED, message: `Tag ${MESSAGE.MES_EXISTS}`});
@@ -48,26 +54,24 @@ class TagService extends BaseService {
         }
     }
 
-    async updateTag(tagId, context, userId, isAbleEditAll) {
+    async updateTag(tagObj, isAbleEditAll) {
         try {
-            const tagModel = this.Model;
+            const tagModel = this.Model,
+                {_id, context, userId} = tagObj;
             let existsCheck = tagModel.find({
                     context: context,
-                    $or: [{userId: ObjectId(userId)}, {userId: {$exists: false}}]
+                    $or: [{userId: ObjectId(userId)}, {userId: {$exists: false}}],
+                    status: 1
                 }),
-                targetCheck = tagModel.find({_id: tagId, userId: userId});
-            const test = await tagModel.find({_id: tagId, userId: userId});
-            console.log(`tagId: ${tagId}--->${test}`);
+                targetCheck = tagModel.find({_id: _id, userId: userId, status: 1});
+
             const [resultOfExistsCheck, resultOfTargetCheck] = await Promise.all([existsCheck, targetCheck]);
             if (resultOfExistsCheck.length !== 0) {
                 throw `Tag ${MESSAGE.MES_EXISTS}`;
             } else if (resultOfTargetCheck.length !== 0 && userId === resultOfTargetCheck.userId || isAbleEditAll) {
-                return await this.update({_id: tagId}, {context: context});
+                return await this.update({_id: _id}, tagObj);
             } else {
-                throw `Tag ${MESSAGE.MES_FAILED}`;
-                // if (resultOfExistsCheck.length !== 0 && resultOfTargetCheck !== 0) {}
-                // let userIdOfTag = existsCheck.length === 0 ? existsCheck.payload.userId : undefined;
-                // return ({code: result.length === 0 ? CODE.CODE_FAILED : CODE.CODE_SUCCESS, payload: result});
+                throw `Update tag ${MESSAGE.MES_FAILED}`;
             }
         } catch (e) {
             return ({code: CODE.CODE_FAILED, message: e});
@@ -75,5 +79,4 @@ class TagService extends BaseService {
     }
 }
 
-module
-    .exports = TagService;
+module.exports = TagService;
